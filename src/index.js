@@ -2482,8 +2482,6 @@ function interpolateResults(allPoints, sampledPoints, sampledResult, numComponen
   return result;
 }
 
-
-
 // ----------------------------------------------------------------------------
 // Standard VTK.js Setup
 // ----------------------------------------------------------------------------
