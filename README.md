@@ -18,6 +18,68 @@ node server.js
 npm start
 ```
 
+## 🚀 **How to Run the Application**
+
+### **Step 1: Clone and Setup**
+```bash
+# Clone the repository
+git clone https://github.com/Nafis2605/CIA_Web.git
+cd CIA_Web
+
+# Switch to the Pratik_Ritesh branch (if not already on it)
+git checkout Pratik_Ritesh
+
+# Install all dependencies
+npm install
+```
+
+### **Step 2: Start the Application (Two Terminal Windows Required)**
+
+**Terminal 1 - Start WebSocket Server:**
+```bash
+# Navigate to project directory
+cd /path/to/CIA_Web
+
+# Start the WebSocket server for collaboration
+node server.js
+```
+*You should see: "WebSocket server running on port 9001"*
+
+**Terminal 2 - Start Development Server:**
+```bash
+# Navigate to project directory (in a new terminal)
+cd /path/to/CIA_Web
+
+# Start the development server
+npm start
+```
+*You should see: "webpack compiled successfully" and the browser will open automatically*
+
+### **Step 3: Access the Application**
+- **Main Application**: http://localhost:8080
+- **WebSocket Server**: ws://localhost:9001 (for collaboration)
+
+### **Step 4: Load Sample Data**
+1. Click "Load VTP File" button
+2. Select any `.vtp` file from the `vtp_files/` folder
+3. Choose visualization mode (Points/Surface)
+4. Enable adaptive streaming features
+
+### **Quick Start Commands (Copy & Paste)**
+```bash
+# Complete setup in one go
+git clone https://github.com/Nafis2605/CIA_Web.git
+cd CIA_Web
+git checkout Pratik_Ritesh
+npm install
+
+# Terminal 1: Start WebSocket server
+node server.js
+
+# Terminal 2: Start development server (in new terminal)
+npm start
+```
+
 ---
 
 ## 🚀 **Core Adaptive Streaming Features**
@@ -315,6 +377,14 @@ setMobileWeights();             // Network(40%), FPS(30%), Memory(30%)
 - **WebSocket disconnected**: Restart `node server.js`
 - **Dev server down**: Restart `npm start`
 - **Port conflicts**: Check if ports 8080/9001 are available
+
+### **Running Issues**
+- **"Command not found: npm"**: Install Node.js from https://nodejs.org/
+- **"Port 8080 already in use"**: Kill existing processes or use `npm start -- --port 8081`
+- **"Cannot find module"**: Run `npm install` to install dependencies
+- **"Branch not found"**: Run `git fetch origin` then `git checkout Pratik_Ritesh`
+- **Browser doesn't open**: Manually navigate to http://localhost:8080
+- **WebSocket connection failed**: Ensure both servers are running (check Terminal 1 & 2)
 
 ### **Adaptive Streaming Issues**
 - **Network monitoring not working**: Check browser connection API support
