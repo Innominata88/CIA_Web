@@ -32,8 +32,13 @@ This report summarizes what we added, changed, and fixed in the codebase during 
 
 - Gaze confidence and prefetch effectiveness
   - Confidence now responds to both rotation (direction change) and translation (position change), not just rotation.
-  - Prefetch radius increased and focal “snapped” to the nearest actor center, so prefetch is more likely to pick something meaningful.
+  - Prefetch radius increased and focal "snapped" to the nearest actor center, so prefetch is more likely to pick something meaningful.
   - Fix: Tensor shape bug resolved by converting history objects into numeric sequences before creating TF tensors.
+
+- Fixed critical vtkSphereSource error
+  - Removed problematic test spheres code that was causing "vtkSphereSource is not defined" error.
+  - Application now starts without errors and all features work properly.
+  - Added comprehensive debugging guide in start_the_program.md.
 
 ---
 
@@ -51,15 +56,29 @@ This report summarizes what we added, changed, and fixed in the codebase during 
 - `GazePrediction.md`
   - New/updated documentation with phases, code snippets, and test plan.
 
+- `start_the_program.md`
+  - Comprehensive step-by-step guide for starting the application.
+  - Includes debugging steps for common issues (port conflicts, vtkSphereSource errors, etc.).
+  - Emergency reset procedures and troubleshooting commands.
+
+- `README.md`
+  - Updated with reference to start_the_program.md for detailed setup instructions.
+
 ---
 
 ## How to Run
 
 1) Install and start (already configured):
 ```bash
-npm run start
+# Start WebSocket server (Terminal 1)
+node server.js
+
+# Start development server (Terminal 2)
+npm start
 ```
 2) Open the app at `http://localhost:8080/` (the dev server usually opens a tab automatically).
+
+**For detailed step-by-step instructions, see: [start_the_program.md](start_the_program.md)**
 
 ---
 
@@ -88,5 +107,8 @@ npm run start
 - [x] Reduce log noise (FPS, active optimizations)
 - [x] Improve network measurement (periodic active tests)
 - [x] Update documentation (`GazePrediction.md`)
+- [x] Fix critical vtkSphereSource error
+- [x] Create comprehensive startup guide (`start_the_program.md`)
+- [x] Update main README with startup guide reference
 
 

@@ -21,7 +21,7 @@ import vtkInteractorStyleTrackballCamera from '@kitware/vtk.js/Interaction/Style
 import { AttributeTypes } from '@kitware/vtk.js/Common/DataModel/DataSetAttributes/Constants';
 import { FieldDataTypes } from '@kitware/vtk.js/Common/DataModel/DataSet/Constants';
 import { XrSessionTypes } from '@kitware/vtk.js/Rendering/WebXR/RenderWindowHelper/Constants';
-
+import vtkSphereSource from '@kitware/vtk.js/Filters/Sources/SphereSource';
 // Force DataAccessHelper to have access to various data source
 import '@kitware/vtk.js/IO/Core/DataAccessHelper/HtmlDataAccessHelper';
 import '@kitware/vtk.js/IO/Core/DataAccessHelper/HttpDataAccessHelper';
@@ -3072,29 +3072,7 @@ function updateScene(fileData){
     
     mapper.setInputData(polyData);
     renderer.addActor(actor);
-    // Temporary demo: Add 4 test spheres for culling visualization
-// (Remove after testing)
-const testSpheres = [];
-for (let i = 0; i < 4; i++) {
-  const testSource = vtkSphereSource.newInstance();
-  testSource.setCenter(i * 200 - 300, 0, 0); // Spread out along X-axis
-  testSource.setRadius(50);
-  testSource.update();
-
-  const testMapper = vtkMapper.newInstance();
-  testMapper.setInputConnection(testSource.getOutputPort());
-
-  const testActor = vtkActor.newInstance();
-  testActor.setMapper(testMapper);
-  testActor.getProperty().setColor(i % 2 === 0 ? [1, 0, 0] : [0, 0, 1]); // Red/blue alternation
-  testActor.setVisibility(true);
-
-  renderer.addActor(testActor);
-  testSpheres.push(testActor);
-}
-
-// Log initial test setup
-logProgress(`Added ${testSpheres.length} test spheres for culling demo (positions: ${testSpheres.map(a => a.getProperty().getColor()).join(', ')})`);
+    // Test spheres removed to fix vtkSphereSource error
     renderer.resetCamera();
     renderWindow.render();
     currentActor = actor;
