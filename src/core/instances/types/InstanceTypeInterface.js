@@ -472,6 +472,136 @@ export class InstanceTypeHandler {
   }
 
   // =========================================================================
+  // VIEW PERSISTENCE
+  // These methods handle saving/loading view configurations for this type
+  // =========================================================================
+
+  /**
+   * Serialize the current view state for persistence
+   *
+   * This is called when saving a view configuration to the database.
+   * The handler should return ALL state needed to recreate the current
+   * view exactly as it appears now. This includes camera, widgets, filters,
+   * colormaps, etc.
+   *
+   * This is different from getSharedState() which is for real-time sync.
+   * This method captures MORE detail for long-term persistence.
+   *
+   * The returned state is type-specific. VTK returns camera parameters,
+   * widget configurations, visualization settings. A Plotly handler might
+   * return axis ranges, selected series, zoom state.
+   *
+   * @param {Object} instanceData - Instance-specific data
+   * @returns {Object} Complete view state for persistence
+   *
+   * Example for VTK:
+   * {
+   *   camera: {
+   *     position: [x, y, z],
+   *     focalPoint: [x, y, z],
+   *     viewUp: [x, y, z],
+   *     viewAngle: 30,
+   *     clippingRange: [near, far]
+   *   },
+   *   widgets: {
+   *     clipPlane: { origin: [x,y,z], normal: [x,y,z], enabled: true },
+   *     sphereWidget: { center: [x,y,z], radius: 5, enabled: false }
+   *   },
+   *   visualization: {
+   *     colorMap: 'rainbow',
+   *     scalarRange: [min, max],
+   *     opacity: 0.8,
+   *     representation: 'surface'
+   *   },
+   *   filters: {
+   *     activeScalar: 'temperature',
+   *     threshold: { min: 20, max: 100 }
+   *   }
+   * }
+   */
+  async serializeViewState(instanceData) {
+    // Default: use getSharedState() if available
+    // Handlers can override this to include more detail for persistence
+    return await this.getSharedState(instanceData);
+  }
+
+  /**
+   * Restore view from serialized state
+   *
+   * This is called when activating an inactive view. The handler receives
+   * the state that was saved via serializeViewState() and should restore
+   * the view to exactly that configuration.
+   *
+   * This is similar to applySharedState() but used for restoration from
+   * database rather than real-time sync. May include more state.
+   *
+   * @param {Object} instanceData - Instance-specific data
+   * @param {Object} viewState - State from serializeViewState()
+   * @returns {Promise<void>}
+   */
+  async deserializeViewState(instanceData, viewState) {
+    // Default: use applySharedState() if available
+    // Handlers can override this for more detailed restoration
+    if (viewState) {
+      await this.applySharedState(instanceData, viewState, 'system');
+    }
+  }
+
+  /**
+   * Project 2D screen coordinates to 3D world coordinates
+   *
+   * This is used for cursor synchronization between VR and non-VR users.
+   * Given a 2D mouse position on screen, this returns the corresponding
+   * 3D world coordinates based on the current view.
+   *
+   * The projection method is type-specific:
+   * - VTK uses raycasting through the scene
+   * - 2D charts might project onto a data plane
+   * - Some types might not support 3D projection at all
+   *
+   * @param {Object} instanceData - Instance-specific data
+   * @param {number} screenX - Screen X coordinate (pixels)
+   * @param {number} screenY - Screen Y coordinate (pixels)
+   * @returns {Object|null} 3D position or null if projection not possible
+   *
+   * Example return value:
+   * {
+   *   world: { x, y, z },        // 3D world coordinates
+   *   surface: { x, y, z },      // Surface hit point (if raycast hit)
+   *   normal: { x, y, z },       // Surface normal at hit point
+   *   distance: 5.2,             // Distance from camera
+   *   hit: true                  // Did raycast hit something?
+   * }
+   */
+  async projectCursor2Dto3D(instanceData, screenX, screenY) {
+    // Default: no projection support
+    // Handlers for 3D visualizations should override this
+    return null;
+  }
+
+  /**
+   * Project 3D world coordinates to 2D screen coordinates
+   *
+   * Inverse of projectCursor2Dto3D. Used for showing where a VR user's
+   * cursor is on a 2D screen.
+   *
+   * @param {Object} instanceData - Instance-specific data
+   * @param {Object} worldPos - 3D world coordinates {x, y, z}
+   * @returns {Object|null} Screen coordinates or null if not visible
+   *
+   * Example return value:
+   * {
+   *   screen: { x, y },   // Screen coordinates (pixels)
+   *   visible: true,      // Is position visible in current view?
+   *   depth: 0.75         // Normalized depth [0=near, 1=far]
+   * }
+   */
+  async projectCursor3Dto2D(instanceData, worldPos) {
+    // Default: no projection support
+    return null;
+  }
+
+  // =========================================================================
   // VR CAPABILITIES
   // These methods declare and implement VR support for this instance type
   // =========================================================================

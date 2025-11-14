@@ -280,8 +280,10 @@ export class ViewManager extends EventEmitter {
   /**
    * Activate a view (render it)
    * This transitions a view from inactive → active state
+   *
+   * The handler is responsible for restoring the view state via deserializeViewState()
    */
-  async activateView(viewId, container, instanceId) {
+  async activateView(viewId, container, instanceId, handler, instanceData) {
     console.log(`👁️ ViewManager: Activating view ${viewId}`);
 
     const view = this._views.get(viewId);
@@ -297,12 +299,24 @@ export class ViewManager extends EventEmitter {
       this._activeViews.set(viewId, {
         instanceId,
         container,
+        handler,
+        instanceData,
         activatedAt: Date.now(),
       });
 
       // Update cached view
       view.state = "active";
       view.lastActivatedAt = Date.now();
+
+      // Restore view state using handler (plugin architecture)
+      if (handler && instanceData && view.config) {
+        try {
+          await handler.deserializeViewState(instanceData, view.config);
+          console.log(`  ✓ View state restored via ${handler.getDisplayName()} handler`);
+        } catch (error) {
+          console.warn(`  ⚠️ Failed to restore view state:`, error);
+        }
+      }
 
       // Sync to Y.js so other users can see it
       this._syncViewToYjs(viewId);
@@ -419,26 +433,40 @@ export class ViewManager extends EventEmitter {
   /**
    * Update view configuration (camera, widgets, filters)
    * This is called when user interacts with the view
+   *
+   * Uses handler's serializeViewState() to capture type-specific state (plugin architecture)
    */
-  async updateViewConfig(viewId, configUpdates) {
+  async updateViewConfig(viewId, handler, instanceData) {
     const view = this._views.get(viewId);
     if (!view) {
       throw new Error(`View ${viewId} not found`);
     }
 
-    // Update local config
-    view.config = {
-      ...view.config,
-      ...configUpdates,
-    };
-
-    // Update Y.js for real-time sync if view is active
-    if (view.state === "active") {
-      this._syncViewToYjs(viewId);
+    const activeView = this._activeViews.get(viewId);
+    if (!activeView) {
+      // View is not active, can't capture state
+      return;
     }
 
-    // Debounced server update (don't spam the database on every camera move)
-    this._scheduleServerUpdate(viewId);
+    try {
+      // Use handler to serialize current view state (plugin architecture)
+      const viewState = await handler.serializeViewState(instanceData);
+
+      if (viewState) {
+        // Update local config
+        view.config = viewState;
+
+        // Update Y.js for real-time sync if view is active
+        if (view.state === "active") {
+          this._syncViewToYjs(viewId);
+        }
+
+        // Debounced server update (don't spam the database on every camera move)
+        this._scheduleServerUpdate(viewId);
+      }
+    } catch (error) {
+      console.warn(`⚠️ Failed to serialize view state:`, error);
+    }
   }
 
   /**
