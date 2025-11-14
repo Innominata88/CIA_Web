@@ -33,6 +33,7 @@ export function useDatasets() {
         annotations: dataset.annotations || [],
         hasPolydata: !!dataset.polydata, // Temporary until ViewConfiguration
         isAnalyzed: dataset.isAnalyzed(),
+        fileStatus: dataset.fileStatus || "available", // FIXED: Include file status for UI
       }));
 
       setDatasets(transformed);

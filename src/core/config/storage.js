@@ -1,8 +1,7 @@
 // src/core/config/storage.js
 
 import { ServerStorageProvider } from "@Core/data/providers/ServerStorageProvider.js";
-import { DatasetManagerAdapter } from "@Core/data/managers/DatasetManagerAdapter.js";
-import { dataCache } from "@Services/storage/dataCache.js";
+import { LocalStorageProvider } from "@Core/data/providers/LocalStorageProvider.js";
 
 /**
  * Storage configuration for the application
@@ -81,14 +80,9 @@ export async function initializeStorageProvider() {
   }
 
   // Either USE_SERVER_STORAGE is false, or server initialization failed
-  console.log("  💾 Creating local storage adapter...");
+  console.log("  💾 Creating local storage provider...");
 
-  // Initialize the data cache if needed
-  if (dataCache && typeof dataCache.initialize === "function") {
-    await dataCache.initialize();
-  }
-
-  const provider = new DatasetManagerAdapter(dataCache);
+  const provider = new LocalStorageProvider();
   await provider.initialize();
   console.log("  ✅ Local storage provider ready");
 

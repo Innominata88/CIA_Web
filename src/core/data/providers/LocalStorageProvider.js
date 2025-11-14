@@ -1,53 +1,62 @@
-// src/core/data/providers/StorageProvider.js
+// src/core/data/providers/LocalStorageProvider.js
+
+import { DatasetManagerAdapter } from "@Core/data/managers/DatasetManagerAdapter.js";
+import { dataCache } from "@Services/storage/dataCache.js";
+
 /**
- * Abstract interface for data storage
- * Implementations: LocalStorageProvider, ServerStorageProvider
+ * LocalStorageProvider
+ *
+ * This is a convenience wrapper that creates a DatasetManagerAdapter
+ * backed by the local dataCache (IndexedDB).
+ *
+ * This provides the same interface as ServerStorageProvider but stores
+ * everything locally instead of on a server.
  */
-export class StorageProvider {
-  // Dataset operations
-  async storeDataset(file, metadata) {
-    throw new Error("Not implemented");
-  }
-  async loadDataset(datasetId) {
-    throw new Error("Not implemented");
-  }
-  async getDatasetMetadata(datasetId) {
-    throw new Error("Not implemented");
-  }
-  async deleteDataset(datasetId) {
-    throw new Error("Not implemented");
-  }
-  async listDatasets(sessionId) {
-    throw new Error("Not implemented");
+export class LocalStorageProvider extends DatasetManagerAdapter {
+  constructor() {
+    super(dataCache);
+    console.log("💾 LocalStorageProvider: Created");
   }
 
-  // ViewConfiguration operations
-  async saveViewConfiguration(config) {
-    throw new Error("Not implemented");
-  }
-  async loadViewConfiguration(viewId) {
-    throw new Error("Not implemented");
-  }
-  async listViewConfigurations(sessionId) {
-    throw new Error("Not implemented");
+  async initialize() {
+    console.log("💾 LocalStorageProvider: Initializing...");
+
+    // Initialize the underlying cache
+    if (dataCache && typeof dataCache.initialize === "function") {
+      await dataCache.initialize();
+    } else if (dataCache && typeof dataCache.initDB === "function") {
+      await dataCache.initDB();
+    }
+
+    // Initialize the adapter
+    await super.initialize();
+
+    console.log("✅ LocalStorageProvider: Ready");
   }
 
-  // Analysis operations
-  async requestAnalysis(datasetId, algorithm, params) {
-    throw new Error("Not implemented");
-  }
-  async getAnalysisResult(analysisId) {
-    throw new Error("Not implemented");
-  }
-  async getAnalysisStatus(analysisId) {
-    throw new Error("Not implemented");
-  }
+  /**
+   * List all datasets in local storage
+   * This implements the interface expected by DatasetManager
+   */
+  async listDatasets() {
+    try {
+      // Get all datasets from the cache
+      const cachedDatasets = await dataCache.listDatasets();
 
-  // Annotation operations
-  async saveAnnotations(datasetId, annotations) {
-    throw new Error("Not implemented");
-  }
-  async loadAnnotations(datasetId) {
-    throw new Error("Not implemented");
+      // Transform to match the server format for consistency
+      return cachedDatasets.map(cached => ({
+        id: cached.hash, // Use hash as ID for local storage
+        filename: cached.name,
+        storage_key: cached.hash,
+        file_size: cached.sizeBytes,
+        uploaded_at: cached.storedAt,
+        metadata: {
+          hash: cached.hash,
+        }
+      }));
+    } catch (error) {
+      console.error("❌ LocalStorageProvider: Failed to list datasets:", error);
+      return [];
+    }
   }
 }
