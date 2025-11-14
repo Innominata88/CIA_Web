@@ -174,9 +174,9 @@ router.get("/session/:sessionId", async (req, res, next) => {
     const { sessionId } = req.params;
 
     const result = await pool.query(
-      `SELECT id, filename, file_size, mime_type, metadata, uploaded_at, uploaded_by
-       FROM datasets 
-       WHERE session_id = $1 
+      `SELECT id, filename, file_size, mime_type, storage_key, metadata, uploaded_at, uploaded_by
+       FROM datasets
+       WHERE session_id = $1
        ORDER BY uploaded_at DESC`,
       [sessionId]
     );

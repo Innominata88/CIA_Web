@@ -174,16 +174,34 @@ export class DatasetManager extends EventEmitter {
           `   📥 Creating dataset from server: ${serverDataset.filename}`
         );
 
+        // Extract file type from filename if mime_type doesn't help
+        const fileType = this._extractFileType(serverDataset.filename);
+
+        // Parse metadata if it's a JSON string
+        let serverMetadata = serverDataset.metadata;
+        if (typeof serverMetadata === 'string') {
+          try {
+            serverMetadata = JSON.parse(serverMetadata);
+          } catch (e) {
+            console.warn(`   ⚠️ Failed to parse metadata for ${serverDataset.filename}`);
+            serverMetadata = {};
+          }
+        }
+
         const dataset = new Dataset({
           id: serverDataset.id,
           filename: serverDataset.filename,
-          fileType: serverDataset.file_type,
-          fileSize: serverDataset.file_size,
-          uploadedBy: serverDataset.uploaded_by,
-          uploadedAt: serverDataset.uploaded_at,
-          cacheKey: serverDataset.id,
-          fileStatus: "on-server",
-          metadata: serverDataset.metadata || {},
+          fileType: fileType,
+          storageKey: serverDataset.storage_key,
+          // Server datasets are fetchable since we can download them
+          fileStatus: "fetchable",
+          metadata: {
+            // Merge server metadata with standard fields
+            ...(serverMetadata || {}),
+            fileSize: serverDataset.file_size,
+            uploadedBy: serverDataset.uploaded_by,
+            uploadedAt: serverDataset.uploaded_at,
+          },
         });
 
         this._datasets.set(dataset.id, dataset);
@@ -226,22 +244,24 @@ export class DatasetManager extends EventEmitter {
     const yDatasets = ydoc.getMap("datasets");
 
     // Only sync the metadata needed for fetching, not the entire dataset
+    // Be defensive about undefined values
     yDatasets.set(dataset.id, {
       id: dataset.id,
-      filename: dataset.filename,
-      fileType: dataset.fileType,
-      hash: dataset.hash,
-      publicPath: dataset.publicPath, // Critical for fetching
-      storageKey: dataset.storageKey, // For server-stored files
-      userId: dataset.userId,
+      filename: dataset.filename || 'unknown',
+      fileType: dataset.fileType || 'unknown',
+      hash: dataset.hash || null,
+      publicPath: dataset.publicPath || null, // Critical for fetching sample files
+      storageKey: dataset.storageKey || null, // Critical for fetching server-stored files
+      userId: dataset.userId || null,
+      fileStatus: dataset.fileStatus || 'unknown',
       metadata: {
-        fileSize: dataset.metadata.fileSize,
-        uploadedAt: dataset.metadata.uploadedAt,
-        uploadedBy: dataset.metadata.uploadedBy,
+        fileSize: dataset.metadata?.fileSize || 0,
+        uploadedAt: dataset.metadata?.uploadedAt || Date.now(),
+        uploadedBy: dataset.metadata?.uploadedBy || 'unknown',
       },
     });
 
-    console.log(`🔄 Dataset metadata synced to Y.js: ${dataset.filename}`);
+    console.log(`🔄 Dataset metadata synced to Y.js: ${dataset.filename} (ID: ${dataset.id})`);
   }
 
   // ==================== DATASET MANAGEMENT ====================
@@ -285,12 +305,16 @@ export class DatasetManager extends EventEmitter {
       console.log(`  ✓ File stored: ${hash.substring(0, 16)}...`);
 
       // STEP 4: Create the Dataset object with fileType
+      // CRITICAL: Use server's ID if provided (server storage) or generate locally (local storage)
+      const datasetId = storageResult.id || generateDatasetId();
+      const storageKey = storageResult.key || storageResult.id || hash;
+
       const dataset = new Dataset({
-        id: generateDatasetId(),
+        id: datasetId,  // Use server ID to ensure consistency across clients
         filename: file.name,
         fileType: fileType, // ← THE KEY FIX
         hash: hash,
-        storageKey: storageResult.key || hash,
+        storageKey: storageKey,
         userId: userId,
         metadata: {
           fileSize: file.size,
@@ -461,13 +485,17 @@ export class DatasetManager extends EventEmitter {
       const storageResult = await this.storageProvider.storeFile(file);
 
       // STEP 6: Create dataset metadata
+      // CRITICAL: Use server's ID if provided (server storage) or generate locally (local storage)
+      const datasetId = storageResult.id || generateDatasetId();
+      const storageKey = storageResult.key || storageResult.id || hash;
+
       const dataset = new Dataset({
-        id: generateDatasetId(),
+        id: datasetId,  // Use server ID to ensure consistency across clients
         filename: file.name,
         fileType: fileType,
         hash: hash,
         publicPath: publicPath,
-        storageKey: storageResult.key || hash,
+        storageKey: storageKey,
         userId: userId,
         rawFile: file, // Keep reference for immediate use
         metadata: {
