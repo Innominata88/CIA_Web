@@ -5,6 +5,7 @@ const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
 const { pool } = require("../index");
+const { executeComputation, computationRegistry } = require("../computations/computationRegistry");
 
 /**
  * Generate deterministic cache key
@@ -377,6 +378,73 @@ router.get("/stats", async (req, res, next) => {
   } catch (error) {
     console.error("❌ Stats error:", error);
     next(error);
+  }
+});
+
+/**
+ * GET /api/computations/handlers
+ * Get information about registered computation handlers
+ */
+router.get("/handlers", async (req, res, next) => {
+  try {
+    const info = computationRegistry.getComputationInfo();
+    const types = computationRegistry.getRegisteredTypes();
+
+    res.json({
+      registeredTypes: types,
+      handlers: info,
+    });
+  } catch (error) {
+    console.error("❌ Handlers info error:", error);
+    next(error);
+  }
+});
+
+/**
+ * POST /api/computations/execute
+ * Execute a computation immediately (for testing)
+ */
+router.post("/execute", async (req, res, next) => {
+  try {
+    const { datasetId, operationType, parameters } = req.body;
+
+    // Validation
+    if (!datasetId || !operationType || !parameters) {
+      return res.status(400).json({
+        error: "datasetId, operationType, and parameters are required",
+      });
+    }
+
+    console.log(`🧮 Executing ${operationType} for dataset ${datasetId}...`);
+
+    // Get dataset metadata (mock for now)
+    const dataset = {
+      id: datasetId,
+      fileType: "vtp",
+      metadata: {
+        pointCount: parameters.mockPointCount || 1000,
+      },
+    };
+
+    // Execute computation
+    const result = await executeComputation(
+      operationType,
+      dataset,
+      parameters,
+      (progress) => {
+        console.log(`   Progress: ${progress}%`);
+      }
+    );
+
+    res.json({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    console.error("❌ Execute error:", error);
+    res.status(500).json({
+      error: error.message,
+    });
   }
 });
 
