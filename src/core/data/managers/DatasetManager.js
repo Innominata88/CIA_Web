@@ -214,7 +214,8 @@ export class DatasetManager extends EventEmitter {
         `   ✅ Synced ${syncedCount} new dataset(s), skipped ${skippedCount} existing`
       );
 
-      this.syncAllDatasetsToYjs();
+      // NOTE: Don't sync to Y.js here - Y.js might not be initialized yet
+      // The appInitializer will call syncAllDatasetsToYjs() after Y.js is ready
 
       return {
         total: serverDatasets.length,
@@ -299,14 +300,31 @@ export class DatasetManager extends EventEmitter {
         );
       }
 
-      // STEP 3: Generate hash and store file using YOUR storageProvider
+      // STEP 3: Generate hash to check for duplicates
       const hash = await this.generateFileHash(file);
+
+      // STEP 3a: Check if we already have this dataset (by hash)
+      const existingDataset = await this.findDatasetByHash(hash);
+      if (existingDataset) {
+        console.log(`  ℹ️ Dataset already exists with ID ${existingDataset.id}`);
+        console.log(`  ✓ Returning existing dataset instead of creating duplicate`);
+        return existingDataset;
+      }
+
+      // STEP 3b: Store file using storageProvider
       const storageResult = await this.storageProvider.storeFile(file);
       console.log(`  ✓ File stored: ${hash.substring(0, 16)}...`);
 
-      // STEP 4: Create the Dataset object with fileType
-      // CRITICAL: Use server's ID if provided (server storage) or generate locally (local storage)
+      // STEP 4: Check if dataset ID returned by server already exists
       const datasetId = storageResult.id || generateDatasetId();
+      const existingById = this.getDataset(datasetId);
+      if (existingById) {
+        console.log(`  ℹ️ Dataset with ID ${datasetId} already exists`);
+        console.log(`  ✓ Returning existing dataset`);
+        return existingById;
+      }
+
+      // STEP 5: Create the Dataset object with fileType
       const storageKey = storageResult.key || storageResult.id || hash;
 
       const dataset = new Dataset({
@@ -323,16 +341,16 @@ export class DatasetManager extends EventEmitter {
         },
       });
 
-      // STEP 5: Store in memory
+      // STEP 6: Store in memory
       this._datasets.set(dataset.id, dataset);
 
-      // STEP 6: Persist to IndexedDB
+      // STEP 7: Persist to IndexedDB
       await this._persistDataset(dataset);
 
-      // STEP 7: Sync to Y.js
+      // STEP 8: Sync to Y.js (if Y.js is available)
       this._syncDatasetMetadataToYjs(dataset);
 
-      // STEP 8: Notify listeners
+      // STEP 9: Notify listeners
       this._emit("datasetAdded", dataset);
 
       console.log(
