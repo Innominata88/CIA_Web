@@ -1,0 +1,93 @@
+/* src/ui/react/components/common/ResizablePanel.css */
+
+.resizable-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1a1a;
+  border-right: 1px solid #2a2a2a;
+  overflow: hidden;
+}
+
+.resizable-panel-content {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Resize handle */
+.resize-handle {
+  position: absolute;
+  z-index: 100;
+  transition: background-color 0.2s;
+}
+
+.resize-handle-vertical {
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+
+.resize-handle-horizontal {
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+}
+
+.resize-handle-end.resize-handle-vertical {
+  right: 0;
+}
+
+.resize-handle-start.resize-handle-vertical {
+  left: 0;
+}
+
+.resize-handle-end.resize-handle-horizontal {
+  bottom: 0;
+}
+
+.resize-handle-start.resize-handle-horizontal {
+  top: 0;
+}
+
+/* Visual line in the handle */
+.resize-handle-line {
+  position: absolute;
+  background-color: transparent;
+  transition: background-color 0.2s;
+}
+
+.resize-handle-vertical .resize-handle-line {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.resize-handle-horizontal .resize-handle-line {
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+/* Hover state */
+.resize-handle:hover,
+.resize-handle:active {
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.resize-handle:hover .resize-handle-line,
+.resize-handle:active .resize-handle-line {
+  background-color: #4CAF50;
+}
+
+/* Active/dragging state */
+.resize-handle:active {
+  background-color: rgba(76, 175, 80, 0.2);
+}
