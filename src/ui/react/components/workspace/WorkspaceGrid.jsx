@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Plus, Users, X } from "lucide-react";
 import { instanceManager } from "@Core/instances/instanceManager.js";
+import { shareRequestManager } from "@Collaboration/sharing/ShareRequestManager.js";
 import { InstanceViewport } from "@UI/react/components/workspace/InstanceViewport.jsx";
 import { RemoteInstancePlaceholder } from "@UI/react/components/workspace/RemoteInstancePlaceholder.jsx";
 
@@ -12,15 +13,15 @@ export function WorkspaceGrid() {
     // Structure: { key, datasetId, isRemote, remoteId, userName }
     const [instances, setInstances] = useState([]);
 
-    // Pending remote instances
-    const [pendingRemoteInstances, setPendingRemoteInstances] = useState([]);
+    // Pending remote instances (from ShareRequestManager)
+    const [pendingRequests, setPendingRequests] = useState([]);
     const [showNotification, setShowNotification] = useState(false);
 
     const gridRef = useRef(null);
     const initialized = useRef(false);
 
     /**
-     * Initialize instance manager
+     * Initialize instance manager and share request manager
      */
     useEffect(() => {
         if (!initialized.current) {
@@ -36,27 +37,20 @@ export function WorkspaceGrid() {
                     console.log(`   Instance: ${event.instanceId}`);
                     console.log(`   From: ${event.instance.userName}`);
 
-                    // Add to pending
-                    setPendingRemoteInstances((prev) => {
-                        const newPending = [...prev, {
-                            instanceId: event.instanceId,
-                            userName: event.instance.userName,
-                            datasetId: event.instance.datasetId,
-                            userId: event.instance.userId, // Also store userId
-                        }];
-                        console.log(`   Total pending: ${newPending.length}`);
-                        return newPending;
-                    });
-                    setShowNotification(true);
+                    // Add to ShareRequestManager instead of local state
+                    const added = shareRequestManager.addRequest(event.instanceId, event.instance);
+                    if (added) {
+                        setShowNotification(true);
+                    }
                 }
 
                 if (event.action === "delete") {
+                    // Remove from rendered instances
                     setInstances((prev) =>
                         prev.filter((i) => i.remoteId !== event.instanceId)
                     );
-                    setPendingRemoteInstances((prev) =>
-                        prev.filter((p) => p.instanceId !== event.instanceId)
-                    );
+                    // Remove from pending requests
+                    shareRequestManager.removeRequest(event.instanceId);
                 }
             });
 
@@ -65,12 +59,59 @@ export function WorkspaceGrid() {
             console.log("🎨 WorkspaceGrid: Initializing instance manager...");
             instanceManager.initialize();
 
-            // Remove the setTimeout check for existing instances - not needed anymore
-            // The instance manager's _checkForExistingRemoteInstances() handles this
+            // Start auto-cleanup for share requests
+            shareRequestManager.startAutoCleanup();
 
             console.log("✅ WorkspaceGrid initialized");
-            return cleanup;
+            return () => {
+                cleanup();
+                shareRequestManager.stopAutoCleanup();
+            };
         }
+    }, []);
+
+    /**
+     * Subscribe to ShareRequestManager for pending requests
+     */
+    useEffect(() => {
+        const unsubscribe = shareRequestManager.subscribe((data) => {
+            setPendingRequests(data.requests);
+            if (data.count > 0 && !showNotification) {
+                // Auto-show notification if there are pending requests
+                setShowNotification(true);
+            }
+        });
+
+        return unsubscribe;
+    }, [showNotification]);
+
+    /**
+     * Listen for accept-share-requests event from StatusBar icon
+     */
+    useEffect(() => {
+        const handleAcceptEvent = (event) => {
+            const { requests } = event.detail;
+            console.log(`✅ Accepting ${requests.length} share request(s) from status bar`);
+
+            requests.forEach((request) => {
+                // Accept the request (removes from manager)
+                shareRequestManager.acceptRequest(request.instanceId);
+
+                // Add to rendered instances
+                setInstances((prev) => [...prev, {
+                    key: `remote-${request.instanceId}`,
+                    datasetId: request.datasetId,
+                    isRemote: true,
+                    remoteId: request.instanceId,
+                    userName: request.userName,
+                }]);
+            });
+        };
+
+        window.addEventListener('cia:accept-share-requests', handleAcceptEvent);
+        return () => {
+            window.removeEventListener('cia:accept-share-requests', handleAcceptEvent);
+        };
     }, []);
 
     /**
@@ -120,27 +161,30 @@ export function WorkspaceGrid() {
      * Accept remote instances
      */
     const handleAcceptRemoteInstances = useCallback(() => {
-        console.log(`✅ Accepting ${pendingRemoteInstances.length} remote instances`);
+        console.log(`✅ Accepting ${pendingRequests.length} remote instance(s)`);
 
-        pendingRemoteInstances.forEach((remote) => {
+        pendingRequests.forEach((request) => {
+            // Accept the request (removes from manager)
+            shareRequestManager.acceptRequest(request.instanceId);
+
+            // Add to rendered instances
             setInstances((prev) => [...prev, {
-                key: `remote-${remote.instanceId}`,
-                datasetId: remote.datasetId,
+                key: `remote-${request.instanceId}`,
+                datasetId: request.datasetId,
                 isRemote: true,
-                remoteId: remote.instanceId,  // The actual instance ID from Y.js
-                userName: remote.userName,
+                remoteId: request.instanceId,  // The actual instance ID from Y.js
+                userName: request.userName,
             }]);
         });
 
-        setPendingRemoteInstances([]);
         setShowNotification(false);
-    }, [pendingRemoteInstances]);
+    }, [pendingRequests]);
 
     /**
-     * Dismiss notification
+     * Dismiss notification (but keep requests in manager)
      */
     const handleDismissNotification = useCallback(() => {
-        setPendingRemoteInstances([]);
+        console.log('📪 Dismissing notification (requests still available in status bar)');
         setShowNotification(false);
     }, []);
 
@@ -192,7 +236,7 @@ export function WorkspaceGrid() {
         <div style={{ display: "flex", flexDirection: "column", height: "100%", position: "relative" }}>
 
             {/* Remote Instance Notification */}
-            {showNotification && pendingRemoteInstances.length > 0 && (
+            {showNotification && pendingRequests.length > 0 && (
                 <div style={{
                     position: "absolute",
                     top: "20px",
@@ -234,10 +278,10 @@ export function WorkspaceGrid() {
                     </div>
 
                     <div style={{ marginBottom: "16px", color: "#ccc", fontSize: "14px" }}>
-                        {pendingRemoteInstances.map((remote, idx) => (
+                        {pendingRequests.map((request, idx) => (
                             <div key={idx} style={{ marginBottom: "4px" }}>
-                                • <strong>{remote.userName}</strong> is viewing{" "}
-                                {remote.datasetId ? "a dataset" : "an empty viewport"}
+                                • <strong>{request.userName}</strong> is viewing{" "}
+                                {request.datasetId ? "a dataset" : "an empty viewport"}
                             </div>
                         ))}
                     </div>
@@ -293,14 +337,14 @@ export function WorkspaceGrid() {
                             ({instances.filter((i) => i.isRemote).length} remote)
                         </span>
                     )}
-                    {pendingRemoteInstances.length > 0 && (
+                    {pendingRequests.length > 0 && (
                         <span style={{
                             color: "#FFA726",
                             marginLeft: "8px",
                             fontSize: "12px",
                             animation: "pulse 2s infinite",
                         }}>
-                            ({pendingRemoteInstances.length} pending)
+                            ({pendingRequests.length} pending)
                         </span>
                     )}
                 </span>

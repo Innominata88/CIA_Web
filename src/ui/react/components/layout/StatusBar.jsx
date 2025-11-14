@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { workspaceManager } from "@Core/instances/workspaceManager.js";
 import { getDatasetManager } from "@UI/react/hooks/useDatasetManager.js";
+import { ShareRequestIcon } from "@UI/react/components/collaboration/ShareRequestIcon.jsx";
 
 export function StatusBar({ phase, ready }) {
     const [instanceCount, setInstanceCount] = useState(0);
@@ -40,6 +41,7 @@ export function StatusBar({ phase, ready }) {
                 <span className="status-item">
                     Datasets: {datasetCount}
                 </span>
+                <ShareRequestIcon />
             </div>
 
             <div className="status-bar__center">
