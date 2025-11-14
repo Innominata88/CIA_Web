@@ -84,8 +84,12 @@ export class ServerStorageProvider {
 
       if (this._hashToId.has(hash)) {
         const existingId = this._hashToId.get(hash);
+        const existingMetadata = this._metadata.get(existingId);
         console.log(`  ✓ File already exists with ID ${existingId}`);
-        return existingId;
+        return {
+          key: existingMetadata?.storage_key || existingId,
+          id: existingId
+        };
       }
 
       const formData = new FormData();
@@ -116,7 +120,13 @@ export class ServerStorageProvider {
       console.log(
         `✅ ServerStorageProvider: File uploaded with ID ${dataset.id}`
       );
-      return dataset.id;
+
+      // Return both ID and key for DatasetManager to use
+      // The server's ID is the authoritative ID that all clients must use
+      return {
+        key: dataset.storage_key,
+        id: dataset.id
+      };
     } catch (error) {
       console.error("❌ ServerStorageProvider: Upload failed:", error);
       throw error;

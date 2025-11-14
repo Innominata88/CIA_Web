@@ -70,8 +70,12 @@ export class DatasetManagerAdapter {
         `✅ Adapter: File stored with hash ${hash.substring(0, 16)}...`
       );
 
-      // Return the hash - this becomes the file reference in Dataset objects
-      return hash;
+      // Return object with key (and no id, so DatasetManager will generate one locally)
+      // This matches the ServerStorageProvider interface
+      return {
+        key: hash,
+        id: null  // No server ID for local storage
+      };
     } catch (error) {
       console.error("❌ Adapter: Failed to store file:", error);
       throw error;
