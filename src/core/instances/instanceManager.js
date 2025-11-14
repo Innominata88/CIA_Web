@@ -326,13 +326,6 @@ class InstanceManager {
   deleteInstance(instanceId) {
     console.log(`🗑️ Deleting instance: ${instanceId}`);
 
-    // NEW: Unsubscribe from state updates
-    if (this._stateSubscriptions && this._stateSubscriptions.has(instanceId)) {
-      const unsubscribe = this._stateSubscriptions.get(instanceId);
-      unsubscribe();
-      this._stateSubscriptions.delete(instanceId);
-    }
-
     this._deleteLocalInstance(instanceId);
 
     // Remove from Y.js if it's our instance
@@ -470,19 +463,6 @@ class InstanceManager {
     });
 
     return count;
-  }
-
-  /**
-   * Listen for remote instance changes
-   *
-   * This is how the UI (WorkspaceGrid) learns about instances
-   * created by other users.
-   */
-  onRemoteInstanceChange(callback) {
-    this._syncCallbacks.push(callback);
-    return () => {
-      this._syncCallbacks = this._syncCallbacks.filter((cb) => cb !== callback);
-    };
   }
 
   /**
