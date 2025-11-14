@@ -94,11 +94,12 @@ export class ServerStorageProvider {
 
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("uploadedBy", this._getCurrentUser());
+      formData.append("sessionId", this.sessionId);
 
       // FIXED: apiBaseUrl already includes /api, so we don't add it again
       const response = await fetch(`${this.apiBaseUrl}/datasets/upload`, {
         method: "POST",
+        headers: this._getAuthHeaders(),
         body: formData,
       });
 
@@ -145,7 +146,10 @@ export class ServerStorageProvider {
     try {
       // FIXED: apiBaseUrl already includes /api
       const response = await fetch(
-        `${this.apiBaseUrl}/datasets/${cacheKey}/download`
+        `${this.apiBaseUrl}/datasets/${cacheKey}/download`,
+        {
+          headers: this._getAuthHeaders(),
+        }
       );
 
       if (!response.ok) {
@@ -187,6 +191,7 @@ export class ServerStorageProvider {
       // FIXED: apiBaseUrl already includes /api
       const response = await fetch(`${this.apiBaseUrl}/datasets/${cacheKey}`, {
         method: "HEAD",
+        headers: this._getAuthHeaders(),
       });
       return response.ok;
     } catch (error) {
@@ -264,6 +269,7 @@ export class ServerStorageProvider {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            ...this._getAuthHeaders(),
           },
         }
       );
@@ -320,13 +326,49 @@ export class ServerStorageProvider {
   }
 
   /**
-   * Helper to get current user ID
+   * Get authentication headers for API requests
+   * @private
+   */
+  _getAuthHeaders() {
+    // Get user info from presence system or session manager
+    const user = this._getCurrentUser();
+
+    return {
+      'X-User-Id': user.id,
+      'X-User-Name': user.name,
+    };
+  }
+
+  /**
+   * Helper to get current user info
    * @private
    */
   _getCurrentUser() {
-    // This would integrate with your user management system
-    // For now, return a placeholder
-    return "anonymous";
+    // Try to get user from presence system
+    if (typeof window !== 'undefined' && window.CIA?.presenceSystem) {
+      const presence = window.CIA.presenceSystem.getCurrentUser();
+      if (presence) {
+        return {
+          id: presence.userId || 'anonymous',
+          name: presence.userName || 'Anonymous',
+        };
+      }
+    }
+
+    // Fallback to sessionManager
+    if (typeof window !== 'undefined' && window.CIA?.sessionManager) {
+      const userName = window.CIA.sessionManager.getUserName();
+      const userId = window.CIA.sessionManager.getUserId();
+      if (userName && userId) {
+        return { id: userId, name: userName };
+      }
+    }
+
+    // Ultimate fallback
+    return {
+      id: 'anonymous',
+      name: 'Anonymous'
+    };
   }
 
   /**
