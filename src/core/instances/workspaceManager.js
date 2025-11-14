@@ -4,6 +4,7 @@
 
 import { generateInstanceId } from "@Utils/idGenerator.js";
 import { getHandlerForType } from "@Core/instances/types/instanceTypesInit.js";
+import { getUserId } from "@Collaboration/presence/userManagement.js";
 
 /**
  * WorkspaceManager
@@ -39,6 +40,9 @@ class WorkspaceManager {
 
     // Change listeners for React components
     this.listeners = new Set();
+
+    // State subscriptions for cleanup
+    this._stateSubscriptions = new Map();
 
     console.log("🎨 WorkspaceManager created (type-agnostic)");
   }
@@ -131,8 +135,16 @@ class WorkspaceManager {
           `📡 WorkspaceManager: Subscribing to state changes for ${instanceId}`
         );
         const unsubscribe = instanceData.stateAdapter.observe((stateUpdate) => {
+          // Guard against Y.js not being initialized yet
+          if (!window.CIA?.yInstances) {
+            console.warn(
+              `⚠️ State update for ${instanceId} dropped - Y.js not initialized`
+            );
+            return;
+          }
+
           // Update Y.js with the new state so other users can see it
-          const yInstance = window.CIA?.yInstances?.get(instanceId);
+          const yInstance = window.CIA.yInstances.get(instanceId);
           if (yInstance && yInstance.userId === this._getCurrentUserId()) {
             window.CIA.yInstances.set(instanceId, {
               ...yInstance,
@@ -143,9 +155,6 @@ class WorkspaceManager {
           }
         });
         // Store the unsubscribe function for cleanup
-        if (!this._stateSubscriptions) {
-          this._stateSubscriptions = new Map();
-        }
         this._stateSubscriptions.set(instanceId, unsubscribe);
       }
 
@@ -174,7 +183,6 @@ class WorkspaceManager {
   }
 
   _getCurrentUserId() {
-    // Import at top: import { getUserId } from '@Collaboration/presence/userManagement.js';
     return window.CIA?.sessionManager?.userId || getUserId();
   }
 
@@ -197,6 +205,14 @@ class WorkspaceManager {
     console.log(`🗑️  Deleting instance: ${instanceId} (${instance.type})`);
 
     try {
+      // Clean up state subscription
+      if (this._stateSubscriptions.has(instanceId)) {
+        const unsubscribe = this._stateSubscriptions.get(instanceId);
+        unsubscribe();
+        this._stateSubscriptions.delete(instanceId);
+        console.log(`   ✓ State subscription cleaned up`);
+      }
+
       // THE KEY CHANGE: Delegate cleanup to the handler
       // The handler knows how to properly dispose of its resources
       // VTK handler deletes VTK objects, Plotly handler cleans up Plotly, etc.
