@@ -6,7 +6,7 @@ import { initializePhase3 } from "@Init/appInitializer.js";
 import { sessionManager } from "@Core/session/sessionManager.js";
 
 // Import UI components
-import { FilesPanel } from "./components/panels/FilesPanel";
+import { LeftSidebarPanel } from "./components/layout/LeftSidebarPanel.jsx";
 import { WorkspaceGrid } from "./components/workspace/WorkspaceGrid.jsx";
 import { TopBar } from "./components/layout/TopBar.jsx";
 import { StatusBar } from "./components/layout/StatusBar.jsx";
@@ -74,16 +74,8 @@ export function CIAWebApp({ username }) {
         overflow: 'hidden', // Let children handle their own overflow
         minHeight: 0, // Critical for flex children to respect overflow
       }}>
-        {/* Left Panel - Fixed width */}
-        <div className="left-panel" style={{
-          width: '250px',
-          flexShrink: 0,
-          overflow: 'auto', // This panel can scroll if content is too tall
-          backgroundColor: 'var(--bg-primary)',
-          borderRight: '1px solid var(--border-subtle)',
-        }}>
-          <FilesPanel />
-        </div>
+        {/* Left Sidebar - Resizable with collapsible sections */}
+        <LeftSidebarPanel />
 
         {/* Center Panel - Grows to fill available horizontal space */}
         <div className="center-panel" style={{
