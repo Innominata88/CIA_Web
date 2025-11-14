@@ -49,10 +49,12 @@ app.get('/health', (req, res) => {
 // NOW we can safely import routes, because pool is already exported
 const datasetRoutes = require('./routes/datasets');
 const viewRoutes = require('./routes/views');
+const computationRoutes = require('./routes/computations');
 
 // Mount routes
 app.use('/api/datasets', datasetRoutes);
 app.use('/api/views', viewRoutes);
+app.use('/api/computations', computationRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
