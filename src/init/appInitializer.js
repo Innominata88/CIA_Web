@@ -14,12 +14,13 @@ import { workspaceManager } from "@Core/instances/workspaceManager.js";
 import { initializeTensorFlow } from "@Services/tensorflow/tensorflowSetup.js";
 import { initializeYjsProvider } from "@Collaboration/yjs/yjsSetup.js";
 import { presenceSystem } from "@Collaboration/presence/presenceSystem.js";
-import { textChat } from "@Collaboration/communication/textChat.js";
+import { textChat } from "@Collaboration/presence/presenceSystem.js";
 import {
   initializeAllObservers,
   markSystemReady,
 } from "@Collaboration/yjs/yjsObservers.js";
 import { useDatasetStore } from "@UI/react/store/datasetStore.js";
+import { initTracker } from "@Init/initializationTracker.js";
 
 // ✅ NEW: Import annotation system
 // We'll initialize this in Phase 2 after DatasetManager is ready
@@ -41,85 +42,105 @@ export async function initializePhase1() {
   console.log("==================================");
 
   try {
+    // Register all Phase 1 steps
+    initTracker.registerStep('instance-types', 'Register instance type handlers', true);
+    initTracker.registerStep('session', 'Initialize session management', true);
+    initTracker.registerStep('storage', 'Initialize storage provider', true);
+    initTracker.registerStep('dataset-manager', 'Initialize dataset manager', true);
+    initTracker.registerStep('server-sync', 'Sync datasets from server', true);
+    initTracker.registerStep('view-manager', 'Initialize view manager', true);
+    initTracker.registerStep('tensorflow', 'Initialize TensorFlow', false); // Non-critical
+    initTracker.registerStep('yjs-provider', 'Connect to Y.js collaboration', true);
+    initTracker.registerStep('yjs-sync', 'Sync datasets to Y.js', true);
+    initTracker.registerStep('view-sync', 'Initialize view configuration sync', true);
+
     // STEP 1: Register instance types
-    // This MUST happen first so handlers are available when needed
-    console.log("📋 Registering instance types...");
+    initTracker.startStep('instance-types');
     registerInstanceTypes();
+    initTracker.completeStep('instance-types');
 
     // STEP 2: Session management
-    // Sets up room ID from URL for collaboration
-    console.log("📋 Initializing session...");
+    initTracker.startStep('session');
     sessionManager.initializeFromURL();
-    console.log(`✅ Session initialized - Room: ${sessionManager.getRoomId()}`);
+    console.log(`   Room: ${sessionManager.getRoomId()}`);
+    initTracker.completeStep('session');
 
     // STEP 3: Data storage layer (Layer 1)
-    console.log("💾 Setting up data storage layer...");
-
-    // Initialize storage provider (with automatic fallback)
+    initTracker.startStep('storage');
     const { provider: storageProvider, mode: storageMode } =
       await initializeStorageProvider();
+    console.log(`   Storage mode: ${storageMode}`);
+    initTracker.completeStep('storage');
 
-    // Create dataset manager WITH the storage provider
-    console.log("  Creating dataset manager (Layer 1)...");
+    // STEP 4: Create dataset manager
+    initTracker.startStep('dataset-manager');
     datasetManager = new DatasetManager(storageProvider);
     await datasetManager.initialize();
-    console.log("  ✓ Dataset manager ready");
+    initTracker.completeStep('dataset-manager');
 
-    // Sync from server if we're in server mode
+    // STEP 5: Sync from server (CRITICAL - must succeed)
     if (storageMode === "server") {
+      initTracker.startStep('server-sync');
       try {
-        await datasetManager.syncDatasetsFromServer();
-        console.log("  ✓ Synced datasets from server");
+        const result = await datasetManager.syncDatasetsFromServer();
+        console.log(`   Loaded ${result.total} dataset(s) from server`);
+        initTracker.completeStep('server-sync');
       } catch (error) {
-        console.warn("  ⚠️ Failed to sync from server:", error.message);
-        console.warn("  Continuing with local datasets only...");
+        // This is CRITICAL - if server sync fails, mark as failed
+        initTracker.failStep('server-sync', error);
+        throw new Error(`Failed to sync from server: ${error.message}`);
       }
+    } else {
+      // Skip this step if not in server mode
+      initTracker.completeStep('server-sync');
     }
 
     console.log("✅ Data storage layer complete");
     console.log(`   Storage mode: ${storageMode}`);
 
-    // STEP 4: View Configuration layer (Layer 2)
-    console.log("📋 Setting up view configuration layer...");
+    // STEP 6: View Configuration layer (Layer 2)
+    initTracker.startStep('view-manager');
     viewConfigurationManager = new ViewConfigurationManager();
-    console.log("  ✓ View configuration manager ready");
-    console.log("✅ View configuration layer complete");
+    initTracker.completeStep('view-manager');
 
-    // STEP 5: TensorFlow setup
-    // Needed for dimensionality reduction algorithms (PCA, t-SNE, UMAP)
-    console.log("🧠 Setting up TensorFlow...");
+    // STEP 7: TensorFlow setup (non-critical)
+    initTracker.startStep('tensorflow');
     try {
       if (initializeTensorFlow && typeof initializeTensorFlow === "function") {
         await initializeTensorFlow();
-        console.log("✅ TensorFlow ready");
+        initTracker.completeStep('tensorflow');
       } else {
-        console.warn("⚠️ TensorFlow setup not available");
+        console.warn("   TensorFlow setup not available");
+        initTracker.completeStep('tensorflow');
       }
     } catch (tfError) {
-      console.warn("⚠️ TensorFlow initialization failed:", tfError.message);
-      console.log("   Continuing without TensorFlow support");
+      initTracker.failStep('tensorflow', tfError);
+      console.warn("   Continuing without TensorFlow support");
     }
 
-    // STEP 6: Y.js provider
-    // Required for real-time collaboration
-    console.log("🔗 Initializing Y.js provider...");
+    // STEP 8: Y.js provider (CRITICAL)
+    initTracker.startStep('yjs-provider');
     if (typeof initializeYjsProvider === "function") {
       initializeYjsProvider();
-      console.log("✅ Y.js provider connected");
+      initTracker.completeStep('yjs-provider');
     } else {
-      throw new Error("Y.js provider is required for collaboration");
+      const error = new Error("Y.js provider is required for collaboration");
+      initTracker.failStep('yjs-provider', error);
+      throw error;
     }
 
-    // Sync existing datasets now that Y.js is ready
-    console.log("🔄 Syncing existing datasets to Y.js...");
-    datasetManager.syncAllDatasetsToYjs();
+    // STEP 9: Sync datasets to Y.js (CRITICAL - this was the metadata sync bug!)
+    initTracker.startStep('yjs-sync');
+    const syncedCount = datasetManager.syncAllDatasetsToYjs();
+    console.log(`   Synced ${syncedCount} dataset(s) to Y.js`);
+    initTracker.completeStep('yjs-sync');
 
-    // STEP 7: Initialize ViewConfigurationManager AFTER Y.js is ready
-    console.log("🔗 Initializing view configuration sync...");
+    // STEP 10: Initialize ViewConfigurationManager AFTER Y.js is ready
+    initTracker.startStep('view-sync');
     viewConfigurationManager.initialize();
-    console.log("✅ View configuration sync ready");
+    initTracker.completeStep('view-sync');
 
-    // STEP 8: Debug helpers
+    // STEP 11: Debug helpers
     setupDebugHelpers();
     console.log("✅ Debug helpers available");
 
