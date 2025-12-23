@@ -2,8 +2,9 @@
 // Parent/folder node for a dataset in the tree view
 
 import React, { useState, useCallback } from 'react';
-import { ChevronDown, ChevronRight, MoreHorizontal, Settings } from 'lucide-react';
-import * as LucideIcons from 'lucide-react';
+import { IconChevronDown, IconChevronRight, IconMoreHorizontal, IconSettings } from '@UI/react/components/common/Icon';
+import DatabaseOutlined from '@mui/icons-material/DatabaseOutlined';
+import BoxOutlined from '@mui/icons-material/BoxOutlined';
 import { getFileTypeDisplayInfo } from '@Core/instances/types/instanceTypesInit.js';
 import { DatasetSettingsModal } from '@UI/react/components/modals/DatasetSettingsModal';
 
@@ -14,8 +15,8 @@ const getDatasetTypeConfig = (fileType) => {
     const displayInfo = getFileTypeDisplayInfo(fileType);
 
     if (displayInfo) {
-        const iconName = displayInfo.icon.charAt(0).toUpperCase() + displayInfo.icon.slice(1);
-        const IconComponent = LucideIcons[iconName] || LucideIcons.Database;
+        // Use BoxOutlined as fallback for unknown file type icons
+        const IconComponent = BoxOutlined;
 
         return {
             icon: IconComponent,
@@ -23,7 +24,7 @@ const getDatasetTypeConfig = (fileType) => {
         };
     }
 
-    return { icon: LucideIcons.Database, color: null };
+    return { icon: DatabaseOutlined, color: null };
 };
 
 /**
@@ -67,7 +68,7 @@ export function DatasetParent({
                 onMouseLeave={() => setIsHovered(false)}
             >
                 <span className="dataset-parent__chevron">
-                    {isExpanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
+                    {isExpanded ? <IconChevronDown size={10} /> : <IconChevronRight size={10} />}
                 </span>
 
                 <span
@@ -95,13 +96,13 @@ export function DatasetParent({
                             }}
                             title="Dataset settings"
                         >
-                            <Settings size={12} />
+                            <IconSettings size={12} />
                         </button>
                         <button
                             className="dataset-parent__more-btn"
                             onClick={(e) => { e.stopPropagation(); handleContextMenu(e); }}
                         >
-                            <MoreHorizontal size={12} />
+                            <IconMoreHorizontal size={12} />
                         </button>
                     </>
                 )}

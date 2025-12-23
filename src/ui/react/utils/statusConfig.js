@@ -12,7 +12,8 @@
  * const color = getStatusColor(user.status);
  */
 
-import { Circle, Clock, Coffee, XCircle } from 'lucide-react';
+import { IconCircle, IconClock, IconXCircle } from '@UI/react/components/common/Icon';
+import { LocalCafeOutlined as IconCoffee } from '@mui/icons-material';
 
 /**
  * Status types available in CIA Web
@@ -25,7 +26,7 @@ import { Circle, Clock, Coffee, XCircle } from 'lucide-react';
 export const STATUS_CONFIG = {
   online: {
     id: "online",
-    icon: Circle,
+    icon: IconCircle,
     label: "Online",
     description: "Available and active",
     color: "var(--status-online)",
@@ -34,7 +35,7 @@ export const STATUS_CONFIG = {
   },
   idle: {
     id: "idle",
-    icon: Clock,
+    icon: IconClock,
     label: "Idle",
     description: "Temporarily away",
     color: "var(--status-idle)",
@@ -43,7 +44,7 @@ export const STATUS_CONFIG = {
   },
   away: {
     id: "away",
-    icon: Coffee,
+    icon: IconCoffee,
     label: "Away",
     description: "Away for a while",
     color: "var(--status-away)",
@@ -52,7 +53,7 @@ export const STATUS_CONFIG = {
   },
   dnd: {
     id: "dnd",
-    icon: XCircle,
+    icon: IconXCircle,
     label: "Do Not Disturb",
     description: "Mute notifications",
     color: "var(--status-dnd)",
@@ -61,7 +62,7 @@ export const STATUS_CONFIG = {
   },
   offline: {
     id: "offline",
-    icon: Circle,
+    icon: IconCircle,
     label: "Offline",
     description: "Not connected",
     color: "var(--status-offline)",
@@ -71,7 +72,7 @@ export const STATUS_CONFIG = {
   // Alias for 'online' - some components use 'active' instead
   active: {
     id: "active",
-    icon: Circle,
+    icon: IconCircle,
     label: "Active",
     description: "Available and active",
     color: "var(--status-online)",
@@ -81,7 +82,7 @@ export const STATUS_CONFIG = {
   // Alias for 'busy' - ProfileModal uses this instead of 'dnd'
   busy: {
     id: "busy",
-    icon: XCircle,
+    icon: IconXCircle,
     label: "Busy",
     description: "Do not disturb",
     color: "var(--status-dnd)",
@@ -114,10 +115,10 @@ export const ALL_STATUSES = [
 /**
  * Get the icon component for a status
  * @param {StatusType} status - Status type
- * @returns {React.ComponentType} Lucide icon component
+ * @returns {React.ComponentType} Material icon component
  */
 export function getStatusIcon(status) {
-  return STATUS_CONFIG[status]?.icon || Circle;
+  return STATUS_CONFIG[status]?.icon || IconCircle;
 }
 
 /**

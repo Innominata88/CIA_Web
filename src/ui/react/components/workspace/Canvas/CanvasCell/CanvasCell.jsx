@@ -15,19 +15,21 @@
 
 import React, { memo, useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import {
-    Plus,
-    X,
-    LayoutGrid,
-    FileImage,
-    FileText,
-    Box,
-    ZoomIn,
-    ArrowUp,
-    ArrowDown,
-    ArrowLeft,
-    ArrowRight,
-    ArrowLeftRight,
-} from 'lucide-react';
+    IconAdd,
+    IconClose,
+    IconLayoutGrid,
+    IconFile,
+    IconBox,
+    IconZoomIn,
+} from '@UI/react/components/common/Icon';
+import {
+    ImageOutlined as FileImage,
+    ArrowUpwardOutlined as ArrowUp,
+    ArrowDownwardOutlined as ArrowDown,
+    ArrowBackOutlined as ArrowLeft,
+    ArrowForwardOutlined as ArrowRight,
+    SwapHorizOutlined as ArrowLeftRight,
+} from '@mui/icons-material';
 
 // =============================================================================
 // DROP ZONE CONSTANTS
@@ -514,7 +516,7 @@ export const CanvasCell = memo(function CanvasCell({
                                 }}
                                 title="Remove invalid placement"
                             >
-                                <X size={14} />
+                                <IconClose size={14} />
                                 <span>Remove</span>
                             </button>
                         )}
@@ -572,7 +574,7 @@ export const CanvasCell = memo(function CanvasCell({
             {/* Isolation mode indicator (for small cells) */}
             {(renderMode === RENDER_MODES.THUMBNAIL || renderMode === RENDER_MODES.SNAPSHOT) && !isEmpty && (
                 <div className="canvas-cell__isolation-hint">
-                    <ZoomIn size={12} />
+                    <IconZoomIn size={12} />
                 </div>
             )}
 
@@ -708,7 +710,7 @@ function EmptyPlaceholder({ row, col, renderMode, inEditMode, onAddClick }) {
     if (renderMode === RENDER_MODES.THUMBNAIL) {
         return (
             <div className="canvas-cell__empty-thumbnail">
-                <Plus size={12} />
+                <IconAdd size={12} />
             </div>
         );
     }
@@ -731,7 +733,7 @@ function EmptyPlaceholder({ row, col, renderMode, inEditMode, onAddClick }) {
                 onClick={handleCenterClick}
                 title={showRadial ? 'Close menu' : 'Add content'}
             >
-                {showRadial ? <X size={20} /> : <Plus size={20} />}
+                {showRadial ? <IconClose size={20} /> : <IconAdd size={20} />}
             </button>
 
             {/* Radial options - positioned around center button */}
@@ -868,7 +870,7 @@ function ViewContent({
                         instanceType="vtk"
                         fallback={
                             <div className="canvas-cell__thumbnail-placeholder">
-                                <Box size={uiConfig.renderContent === 'snapshot' ? 16 : 24} />
+                                <IconBox size={uiConfig.renderContent === 'snapshot' ? 16 : 24} />
                             </div>
                         }
                     />
@@ -918,7 +920,7 @@ function NotesPlaceholder({ notesId, renderMode, onClose }) {
     if (renderMode === RENDER_MODES.SNAPSHOT || renderMode === RENDER_MODES.THUMBNAIL) {
         return (
             <div className="canvas-cell__notes-mini">
-                <FileText size={renderMode === RENDER_MODES.SNAPSHOT ? 16 : 20} />
+                <IconFile size={renderMode === RENDER_MODES.SNAPSHOT ? 16 : 20} />
             </div>
         );
     }
@@ -936,7 +938,7 @@ function NotesPlaceholder({ notesId, renderMode, onClose }) {
                     }}
                     title="Remove notes"
                 >
-                    <X size={14} />
+                    <IconClose size={14} />
                 </button>
             </div>
             <div className="canvas-cell__notes-body">
@@ -974,7 +976,7 @@ function ImagePlaceholder({ imageId, renderMode, onClose }) {
                     }}
                     title="Remove image"
                 >
-                    <X size={14} />
+                    <IconClose size={14} />
                 </button>
             </div>
             <div className="canvas-cell__image-body">
