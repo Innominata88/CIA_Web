@@ -1,0 +1,392 @@
+// src/ui/react/components/panels/LeftPanel/tabs/LayoutTab/LayoutTab.scss
+@use "theme" as *;
+
+// =============================================================================
+// LAYOUT TAB CONTAINER
+// =============================================================================
+
+.layout-tab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+
+  &--loading {
+    .layout-tab__loading {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: $spacing-sm;
+      color: $color-text-muted;
+      font-size: $font-size-sm;
+
+      .spin {
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+}
+
+// =============================================================================
+// SCROLLABLE CONTENT AREA
+// =============================================================================
+
+.layout-tab__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-sm;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $color-border-subtle;
+    border-radius: 3px;
+    &:hover {
+      background: $color-border-default;
+    }
+  }
+}
+
+// =============================================================================
+// CARD SECTIONS
+// =============================================================================
+
+.layout-tab__card {
+  padding: $spacing-sm;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-md;
+  border-left: 2px solid var(--card-color, $color-border-default);
+
+  &[data-color="purple"] {
+    --card-color: #{$color-accent-purple};
+  }
+  &[data-color="blue"] {
+    --card-color: #{$color-accent-blue};
+  }
+  &[data-color="green"] {
+    --card-color: #{$color-accent-green};
+  }
+  &[data-color="amber"] {
+    --card-color: #{$color-accent-amber};
+  }
+  &[data-color="teal"] {
+    --card-color: #{$color-accent-teal};
+  }
+}
+
+.layout-tab__card-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-sm;
+  font-size: 10px;
+  font-weight: $font-weight-semibold;
+  color: $color-text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  svg {
+    color: var(--card-color, $color-text-muted);
+  }
+}
+
+.layout-tab__card-description {
+  margin-top: $spacing-sm;
+  font-size: 10px;
+  color: $color-text-tertiary;
+  line-height: 1.4;
+}
+
+// =============================================================================
+// FLOW DIRECTION TOGGLE
+// =============================================================================
+
+.layout-tab__direction-toggle {
+  display: flex;
+  gap: 4px;
+  background: $color-bg-tertiary;
+  padding: 3px;
+  border-radius: $radius-sm;
+}
+
+.layout-tab__direction-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: $radius-xs;
+  color: $color-text-muted;
+  font-size: $font-size-xs;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: $color-text-secondary;
+  }
+
+  &--active {
+    background: rgba($color-accent-green, 0.15);
+    border-color: rgba($color-accent-green, 0.3);
+    color: $color-accent-green;
+  }
+}
+
+// =============================================================================
+// CANVAS SIZE CONTROL
+// =============================================================================
+
+.layout-tab__canvas-size {
+  display: flex;
+  gap: $spacing-md;
+}
+
+.layout-tab__size-control {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.layout-tab__size-label {
+  font-size: 10px;
+  color: $color-text-muted;
+  text-transform: uppercase;
+}
+
+.layout-tab__size-stepper {
+  display: flex;
+  align-items: center;
+  background: $color-bg-tertiary;
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-sm;
+  overflow: hidden;
+
+  button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: $color-text-secondary;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.08);
+      color: $color-text-primary;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.layout-tab__size-value {
+  min-width: 32px;
+  text-align: center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-accent-green;
+  font-family: $font-family-mono;
+}
+
+// =============================================================================
+// SPAWN SIZE PICKER
+// =============================================================================
+
+.layout-tab__spawn-sizes {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.layout-tab__spawn-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: $spacing-xs;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-sm;
+  color: $color-text-muted;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all $transition-fast;
+  min-width: 52px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: $color-border-default;
+    color: $color-text-secondary;
+  }
+
+  &--active {
+    background: rgba($color-accent-green, 0.15);
+    border-color: rgba($color-accent-green, 0.4);
+    color: $color-accent-green;
+
+    .layout-tab__spawn-preview {
+      border-color: rgba($color-accent-green, 0.6);
+
+      .layout-tab__spawn-cell {
+        background: $color-accent-green;
+      }
+    }
+  }
+}
+
+.layout-tab__spawn-preview {
+  display: grid;
+  gap: 2px;
+  width: 24px;
+  height: 24px;
+  padding: 2px;
+  border: 1px solid $color-border-default;
+  border-radius: 2px;
+}
+
+.layout-tab__spawn-cell {
+  background: $color-text-muted;
+  border-radius: 1px;
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+// =============================================================================
+// QUICK LAYOUTS
+// =============================================================================
+
+.layout-tab__quick-layouts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.layout-tab__quick-btn {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-sm;
+  color: $color-text-muted;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba($color-accent-amber, 0.1);
+    border-color: rgba($color-accent-amber, 0.3);
+    color: $color-accent-amber;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+// =============================================================================
+// CANVAS TOOLS
+// =============================================================================
+
+.layout-tab__tools {
+  display: flex;
+  gap: 6px;
+}
+
+.layout-tab__tool-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: $spacing-sm;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid $color-border-subtle;
+  border-radius: $radius-sm;
+  color: $color-text-muted;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: $color-text-secondary;
+  }
+
+  &--active {
+    &[data-color="blue"] {
+      background: rgba($color-accent-blue, 0.15);
+      border-color: rgba($color-accent-blue, 0.4);
+      color: $color-accent-blue;
+    }
+    &[data-color="teal"] {
+      background: rgba($color-accent-teal, 0.15);
+      border-color: rgba($color-accent-teal, 0.4);
+      color: $color-accent-teal;
+    }
+    &[data-color="purple"] {
+      background: rgba($color-accent-purple, 0.15);
+      border-color: rgba($color-accent-purple, 0.4);
+      color: $color-accent-purple;
+    }
+  }
+}
+
+// =============================================================================
+// DOCKED CANVAS NAVIGATOR
+// =============================================================================
+
+.layout-tab__navigator {
+  flex-shrink: 0;
+  border-top: 1px solid $color-border-subtle;
+  background: $color-bg-secondary;
+  padding: $spacing-sm;
+  max-height: 280px;
+  overflow-y: auto;
+
+  // Make navigator fit better in the panel
+  .canvas-navigator {
+    min-width: unset;
+    width: 100%;
+
+    &--compact {
+      padding: $spacing-xs;
+    }
+  }
+}
+
+// =============================================================================
+// ANIMATIONS
+// =============================================================================
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

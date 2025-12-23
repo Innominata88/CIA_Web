@@ -1,0 +1,348 @@
+// src/ui/react/components/workspace/Canvas/CanvasGrid/CanvasGrid.scss
+// Canvas grid styles - Updated December 2025
+//
+// ARCHITECTURE:
+// - Edge-to-edge layout with no artificial borders
+// - Virtual scrolling with spacer pattern
+// - Render mode indicators for progressive UI
+// - No minimum cell sizes - cells scale with viewport
+
+@use "sass:color";
+@use "theme" as *;
+
+// =============================================================================
+// CANVAS GRID - Root container
+// =============================================================================
+
+.canvas-grid {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: $color-bg-tertiary;
+  overflow: hidden;
+
+  // Loading/error states
+  &--loading,
+  &--error {
+    .canvas-grid__container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  // Focus mode styling
+  &--focus-mode {
+    .canvas-grid__container {
+      border: 2px solid $color-accent-amber;
+      border-radius: $radius-lg;
+    }
+  }
+
+  // Render mode data attribute (for CSS debugging)
+  &[data-render-mode="full"] {
+    --render-mode-indicator: #{$color-accent-primary};
+  }
+  &[data-render-mode="compact"] {
+    --render-mode-indicator: #{$color-accent-teal};
+  }
+  &[data-render-mode="thumbnail"] {
+    --render-mode-indicator: #{$color-accent-amber};
+  }
+  &[data-render-mode="snapshot"] {
+    --render-mode-indicator: #{$color-accent-red};
+  }
+}
+
+// =============================================================================
+// CONTAINER - Edge-to-edge wrapper
+// =============================================================================
+
+.canvas-grid__container {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+// =============================================================================
+// MEASUREMENT CONTAINER - Provides stable size reference
+// =============================================================================
+
+.canvas-grid__measure-container {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  position: relative;
+
+  // Don't use flex for centering - it collapses the container
+  // Use absolute positioning for the loader instead
+}
+
+// =============================================================================
+// SCROLL CONTAINER - Handles virtual scrolling
+// =============================================================================
+
+.canvas-grid__scroll-container {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  padding: 8px 16px 16px 8px;
+
+  // Focus outline for keyboard navigation
+  &:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 2px rgba($color-accent-primary, 0.3);
+  }
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+  }
+}
+
+.canvas-grid__viewport {
+  position: absolute;
+  inset: 0;
+  padding: 12px 16px 16px 12px;
+
+  // Focus outline for keyboard navigation
+  &:focus {
+    outline: none;
+    box-shadow: inset 0 0 0 2px rgba($color-accent-primary, 0.3);
+  }
+
+  // Loading state - dim but keep visible to preserve VTK instances
+  &--loading {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  // Selection mode - show crosshair cursor when Ctrl/Shift held
+  &--selection-mode {
+    cursor: crosshair;
+
+    .canvas-cell {
+      cursor: crosshair;
+    }
+  }
+}
+
+// =============================================================================
+// LOADING OVERLAY - Shows over grid without unmounting it
+// =============================================================================
+
+.canvas-grid__loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba($color-bg-tertiary, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+// =============================================================================
+// SPACER - Creates scroll area for virtual scrolling
+// =============================================================================
+
+.canvas-grid__spacer {
+  position: relative;
+}
+
+// =============================================================================
+// CELL WRAPPER - Absolute positioning for cells
+// =============================================================================
+
+.canvas-grid__cell-wrapper {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+
+  > .canvas-cell {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// =============================================================================
+// LOADING STATE
+// =============================================================================
+
+.canvas-grid__loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-md;
+  padding: $spacing-xl;
+  color: $color-text-muted;
+  text-align: center;
+}
+
+.canvas-grid__spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: $color-accent-primary;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.canvas-grid__error-icon {
+  font-size: 32px;
+}
+
+.canvas-grid__error-message {
+  font-size: $font-size-sm;
+  color: $color-accent-red;
+  max-width: 300px;
+}
+
+.canvas-grid__error-hint {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+// =============================================================================
+// MODE BANNERS
+// =============================================================================
+
+.canvas-grid__focus-banner,
+.canvas-grid__selection-banner,
+.canvas-grid__edit-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xs $spacing-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+  }
+}
+
+.canvas-grid__focus-banner {
+  background: rgba($color-accent-amber, 0.15);
+  border-bottom: 1px solid rgba($color-accent-amber, 0.3);
+  color: $color-accent-amber;
+}
+
+.canvas-grid__selection-banner {
+  background: rgba($color-accent-teal, 0.15);
+  border-bottom: 1px solid rgba($color-accent-teal, 0.3);
+  color: $color-accent-teal;
+}
+
+.canvas-grid__edit-banner {
+  background: rgba($color-accent-primary, 0.1);
+  border-bottom: 1px solid rgba($color-accent-primary, 0.2);
+  color: $color-text-secondary;
+}
+
+// =============================================================================
+// VIEWPORT INFO BAR
+// =============================================================================
+
+.canvas-grid__viewport-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-xs $spacing-sm;
+  background: $color-bg-secondary;
+  border-top: 1px solid $color-border-subtle;
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+  flex-shrink: 0;
+
+  span {
+    font-family: $font-family-mono;
+  }
+
+  // Render mode indicator
+  &::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--render-mode-indicator, $color-text-muted);
+    margin-right: $spacing-xs;
+  }
+}
+
+// =============================================================================
+// RUBBER BAND SELECTION
+// =============================================================================
+
+.canvas-grid__rubber-band {
+  position: absolute;
+  background: rgba($color-accent-teal, 0.15);
+  border: 2px solid $color-accent-teal;
+  border-radius: $radius-sm;
+  pointer-events: none;
+  z-index: 100;
+}
+
+// =============================================================================
+// RESPONSIVE
+// =============================================================================
+
+@media (max-width: 768px) {
+  .canvas-grid__focus-banner,
+  .canvas-grid__selection-banner,
+  .canvas-grid__edit-banner {
+    padding: $spacing-xs $spacing-sm;
+    font-size: 10px;
+  }
+
+  .canvas-grid__viewport-info {
+    font-size: 10px;
+    flex-direction: column;
+    gap: 2px;
+    padding: $spacing-xs;
+  }
+}
+
+// =============================================================================
+// UTILITY CLASSES
+// =============================================================================
+
+.bar-divider {
+  width: 1px;
+  height: 20px;
+  background: $color-border-default;
+  margin: 0 $spacing-xs;
+}

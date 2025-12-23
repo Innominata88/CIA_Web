@@ -1,0 +1,181 @@
+/**
+ * @file SecondaryHeader.scss
+ * @description Styles for secondary header bar with responsive zone behavior.
+ * 
+ * RESPONSIVE STRATEGY:
+ * - Zones use flex-basis with min-width to allow shrinking
+ * - Content adapts via container queries (hide labels, show icons only)
+ * - NO overflow: hidden on zones - content adapts instead of clipping
+ * - Dropdowns use React Portals (rendered outside this container)
+ * 
+ * Layout:
+ * ┌─────────────────┬──────────────────────────────────────┬─────────────────┐
+ * │  LEFT ZONE      │           CENTER ZONE                │   RIGHT ZONE    │
+ * │  (adaptive)     │        (flexible, fills)             │  (adaptive)     │
+ * └─────────────────┴──────────────────────────────────────┴─────────────────┘
+ */
+
+@use "theme" as *;
+
+// =============================================================================
+// VARIABLES
+// =============================================================================
+
+$header-height: 56px;
+$zone-min-width: 180px; // Minimum before content starts hiding
+$zone-padding: $spacing-md;
+
+// =============================================================================
+// SECONDARY HEADER CONTAINER
+// =============================================================================
+
+.secondary-header {
+  width: 100%;
+  height: $header-height;
+  background: $color-bg-secondary;
+  border-bottom: 1px solid $color-border-default;
+  display: flex;
+  align-items: center;
+  z-index: 90;
+  flex-shrink: 0;
+
+  // Allow dropdowns to overflow (they use portals for actual rendering)
+  position: relative;
+}
+
+// =============================================================================
+// ZONE BASE STYLES
+// =============================================================================
+
+.secondary-header__zone {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: $spacing-sm;
+
+  // NOTE: Don't use container-type here - it breaks absolute positioning
+  // for dropdowns. Container queries applied at component level instead.
+}
+
+// =============================================================================
+// LEFT ZONE: Workspace Selector
+// =============================================================================
+
+.secondary-header__zone--left {
+  // Size to content, don't grow, can shrink
+  flex: 0 0 auto;
+  min-width: $zone-min-width;
+  // NO max-width - let it take the space it needs
+
+  padding: 0 $zone-padding;
+  border-right: 1px solid $color-border-subtle;
+  justify-content: flex-start;
+
+  // CRITICAL: Position context for dropdown menus
+  position: relative;
+}
+
+// =============================================================================
+// CENTER ZONE: Navigation + View Context
+// =============================================================================
+
+.secondary-header__zone--center {
+  flex: 1 1 auto;
+  min-width: 200px; // Enough for nav block at minimum
+  padding: 0 $zone-padding;
+  justify-content: center;
+  gap: $spacing-md;
+
+  // DON'T use overflow: hidden - let content wrap/adapt
+}
+
+// =============================================================================
+// RIGHT ZONE: Room + Presence
+// =============================================================================
+
+.secondary-header__zone--right {
+  // Size to content, don't grow, can shrink
+  flex: 0 0 auto;
+  min-width: $zone-min-width;
+  // NO max-width - let it take the space it needs
+
+  padding: 0 $zone-padding;
+  border-left: 1px solid $color-border-subtle;
+  justify-content: flex-end;
+
+  // CRITICAL: Position context for dropdown menus
+  position: relative;
+}
+
+// =============================================================================
+// DIVIDER
+// =============================================================================
+
+.secondary-header__divider {
+  width: 1px;
+  height: 28px;
+  background: $color-border-subtle;
+  margin: 0 $spacing-xs;
+  flex-shrink: 0;
+}
+
+// =============================================================================
+// RESPONSIVE - Use media queries (container queries break dropdown positioning)
+// =============================================================================
+
+// NOTE: We intentionally DON'T use CSS Container Queries here because
+// container-type: inline-size creates a new containing block that breaks
+// position: absolute for dropdown menus. Use media queries instead.
+
+// =============================================================================
+// RESPONSIVE BREAKPOINTS
+// =============================================================================
+
+@media (max-width: 1400px) {
+  .secondary-header__zone--left,
+  .secondary-header__zone--right {
+    padding: 0 $spacing-sm;
+  }
+
+  .secondary-header__zone--center {
+    gap: $spacing-sm;
+  }
+}
+
+@media (max-width: 1200px) {
+  .secondary-header__zone--left,
+  .secondary-header__zone--right {
+    min-width: 140px;
+  }
+
+  .secondary-header__zone--center {
+    gap: $spacing-xs;
+    padding: 0 $spacing-sm;
+  }
+
+  .secondary-header__divider {
+    display: none;
+  }
+}
+
+@media (max-width: 1000px) {
+  .secondary-header {
+    height: 48px;
+  }
+
+  .secondary-header__zone--left,
+  .secondary-header__zone--right {
+    min-width: 120px;
+    padding: 0 $spacing-xs;
+  }
+}
+
+// =============================================================================
+// DROPDOWN PORTAL MARKER
+// Dropdowns render via React Portal to <body> to avoid overflow issues
+// =============================================================================
+
+.secondary-header__dropdown-portal {
+  position: fixed;
+  z-index: 1000;
+}

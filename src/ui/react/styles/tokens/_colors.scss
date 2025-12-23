@@ -1,0 +1,256 @@
+// Design Tokens: Colors - CIA Web Moonlight Theme
+// =============================================================================
+//
+// This is the primary color palette for CIA Web.
+//
+// Design principles:
+// - True black backgrounds for OLED optimization and visual depth
+// - Vibrant moonlight pastel accents - saturated but easy on eyes
+// - Apple-inspired status colors optimized for dark mode
+// - Semantic tool colors for consistent feature identification
+// - Collaboration features highlighted with pink accent
+// - Starred/bookmarked items use warm amber
+//
+// To use: @use "theme" as *; then reference variables like $color-accent-blue
+
+// ============================================================================
+// BASE COLORS - True Black Foundation
+// ============================================================================
+
+// Background layers (darkest to lightest)
+$color-bg-base: #000000; // True black - deepest layer
+$color-bg-primary: #0f0f0f; // Primary surfaces
+$color-bg-secondary: #1a1a1a; // Elevated surfaces
+$color-bg-tertiary: #222222; // More elevated
+$color-bg-elevated: #2a2a2a; // Highest elevation (modals, dropdowns)
+
+// Glassmorphism surfaces (translucent layers)
+$color-glass-subtle: rgba(255, 255, 255, 0.02);
+$color-glass-light: rgba(255, 255, 255, 0.04);
+$color-glass-medium: rgba(255, 255, 255, 0.06);
+$color-glass-strong: rgba(255, 255, 255, 0.1);
+$color-glass-panel: rgba(30, 30, 30, 0.85); // Panel backgrounds with blur
+
+// ============================================================================
+// BORDERS - Subtle White Overlays
+// ============================================================================
+
+$color-border-subtle: rgba(255, 255, 255, 0.04);
+$color-border-default: rgba(255, 255, 255, 0.08);
+$color-border-medium: rgba(255, 255, 255, 0.12);
+$color-border-strong: rgba(255, 255, 255, 0.2);
+$color-border-accent: rgba(96, 165, 250, 0.4); // For focused/selected elements
+
+// ============================================================================
+// TEXT - High Contrast Hierarchy
+// ============================================================================
+
+$color-text-primary: rgba(255, 255, 255, 0.95); // Headings, important text
+$color-text-secondary: rgba(255, 255, 255, 0.7); // Body text
+$color-text-tertiary: rgba(255, 255, 255, 0.5); // Labels, hints
+$color-text-muted: rgba(255, 255, 255, 0.3); // Disabled, metadata
+$color-text-disabled: rgba(255, 255, 255, 0.2); // Disabled controls
+
+// ============================================================================
+// ACCENT COLORS - Moonlight Pastels
+// ============================================================================
+
+// Primary accent - Blue (main UI elements, selections, focus)
+$color-accent-primary: #60a5fa;
+$color-accent-primary-hover: #78b5fb;
+$color-accent-primary-active: #4a95f0;
+$color-accent-primary-glow: rgba(96, 165, 250, 0.15);
+
+// Blue - Electric blue (files, navigation, links)
+$color-accent-blue: #60a5fa;
+$color-accent-blue-glow: rgba(96, 165, 250, 0.2);
+
+// Purple - Soft lavender (filters, analysis, VTK)
+$color-accent-purple: #c084fc;
+$color-accent-purple-glow: rgba(192, 132, 252, 0.18);
+
+// Pink - Rose (sharing, collaboration, notifications)
+$color-accent-pink: #fb7185;
+$color-accent-pink-glow: rgba(251, 113, 133, 0.18);
+
+// Amber - Warm gold (starred, bookmarks, warnings)
+$color-accent-amber: #fbbf24;
+$color-accent-amber-glow: rgba(251, 191, 36, 0.18);
+
+// Green - Emerald (active states, loaded, success)
+$color-accent-green: #34d399;
+$color-accent-green-glow: rgba(52, 211, 153, 0.18);
+
+// Teal/Sky - Light cyan (datasets, secondary nav)
+$color-accent-teal: #7dd3fc;
+$color-accent-teal-glow: rgba(125, 211, 252, 0.18);
+$color-accent-sky: $color-accent-teal;
+$color-accent-sky-glow: $color-accent-teal-glow;
+
+// Indigo/Violet - Deep purple (annotations, special tools)
+$color-accent-indigo: #a78bfa;
+$color-accent-indigo-glow: rgba(167, 139, 250, 0.18);
+$color-accent-violet: $color-accent-indigo;
+$color-accent-violet-glow: $color-accent-indigo-glow;
+
+// Red - Recording, stop, urgent actions
+$color-accent-red: #f87171;
+$color-accent-red-glow: rgba(248, 113, 113, 0.18);
+
+// ============================================================================
+// STATUS COLORS - Apple-Inspired
+// ============================================================================
+
+$color-success: #30d158;
+$color-success-bg: rgba(48, 209, 88, 0.08);
+$color-success-border: rgba(48, 209, 88, 0.25);
+
+$color-warning: #ff9f0a;
+$color-warning-bg: rgba(255, 159, 10, 0.08);
+$color-warning-border: rgba(255, 159, 10, 0.25);
+
+$color-error: #ff453a;
+$color-error-bg: rgba(255, 69, 58, 0.08);
+$color-error-border: rgba(255, 69, 58, 0.25);
+
+$color-info: #0a84ff;
+$color-info-bg: rgba(10, 132, 255, 0.08);
+$color-info-border: rgba(10, 132, 255, 0.25);
+
+// ============================================================================
+// INTERACTIVE STATES
+// ============================================================================
+
+$color-hover-bg: rgba(255, 255, 255, 0.04);
+$color-hover-border: rgba(255, 255, 255, 0.15);
+
+$color-active-bg: rgba(255, 255, 255, 0.08);
+$color-active-border: rgba(255, 255, 255, 0.2);
+
+$color-focus-ring: rgba(96, 165, 250, 0.4);
+$color-focus-glow: rgba(96, 165, 250, 0.2);
+
+$color-disabled-bg: rgba(255, 255, 255, 0.02);
+$color-disabled-text: rgba(255, 255, 255, 0.15);
+$color-disabled-border: rgba(255, 255, 255, 0.04);
+
+// ============================================================================
+// OVERLAY & BACKDROP
+// ============================================================================
+
+$color-overlay-light: rgba(0, 0, 0, 0.5);
+$color-overlay-medium: rgba(0, 0, 0, 0.7);
+$color-overlay-heavy: rgba(0, 0, 0, 0.85);
+$color-backdrop-blur: rgba(15, 15, 15, 0.85);
+
+// ============================================================================
+// SEMANTIC: WORKSPACE TYPES
+// ============================================================================
+
+$color-workspace-personal: $color-accent-green;
+$color-workspace-project: $color-accent-blue;
+$color-workspace-breakout: $color-accent-purple;
+
+// ============================================================================
+// SEMANTIC: TOOL/TAB COLORS
+// ============================================================================
+
+$color-tool-files: $color-accent-blue;
+$color-tool-datasets: $color-accent-teal;
+$color-tool-instance: $color-accent-amber;
+$color-tool-layout: $color-accent-green;
+$color-tool-annotations: $color-accent-pink;
+$color-tool-cursors: $color-accent-amber;
+$color-tool-filters: $color-accent-indigo;
+$color-tool-bookmarks: $color-accent-purple;
+$color-tool-recordings: $color-accent-red;
+
+// ============================================================================
+// SEMANTIC: FILE TYPES
+// ============================================================================
+
+$color-filetype-nifti: $color-accent-blue;
+$color-filetype-dicom: $color-accent-teal;
+$color-filetype-vtk: $color-accent-purple;
+$color-filetype-folder: $color-accent-amber;
+$color-filetype-default: $color-text-muted;
+
+// ============================================================================
+// SEMANTIC: INSTANCE/VIEW COLORS
+// ============================================================================
+
+// Colors for differentiating multiple open views
+$color-instance-1: $color-accent-blue;
+$color-instance-2: $color-accent-green;
+$color-instance-3: $color-accent-teal;
+$color-instance-4: $color-accent-pink;
+$color-instance-5: $color-accent-purple;
+$color-instance-6: $color-accent-amber;
+
+// Named aliases for clarity
+$color-instance-blue: $color-accent-blue;
+$color-instance-green: $color-accent-green;
+$color-instance-teal: $color-accent-teal;
+$color-instance-pink: $color-accent-pink;
+$color-instance-purple: $color-accent-purple;
+$color-instance-amber: $color-accent-amber;
+
+// ============================================================================
+// CSS CUSTOM PROPERTIES EXPORT
+// ============================================================================
+
+// Use this mixin in global.scss to export CSS variables for JS interop
+// Example: background: rgba(var(--color-accent-blue-rgb), 0.5);
+
+@mixin export-css-variables {
+  :root {
+    // Backgrounds
+    --color-bg-base: #{$color-bg-base};
+    --color-bg-primary: #{$color-bg-primary};
+    --color-bg-secondary: #{$color-bg-secondary};
+    --color-bg-tertiary: #{$color-bg-tertiary};
+    --color-bg-elevated: #{$color-bg-elevated};
+
+    // Text
+    --color-text-primary: #{$color-text-primary};
+    --color-text-secondary: #{$color-text-secondary};
+    --color-text-tertiary: #{$color-text-tertiary};
+    --color-text-muted: #{$color-text-muted};
+
+    // Borders
+    --color-border-subtle: #{$color-border-subtle};
+    --color-border-default: #{$color-border-default};
+    --color-border-medium: #{$color-border-medium};
+    --color-border-strong: #{$color-border-strong};
+
+    // Accents (hex values)
+    --color-accent-primary: #{$color-accent-primary};
+    --color-accent-blue: #{$color-accent-blue};
+    --color-accent-purple: #{$color-accent-purple};
+    --color-accent-pink: #{$color-accent-pink};
+    --color-accent-amber: #{$color-accent-amber};
+    --color-accent-green: #{$color-accent-green};
+    --color-accent-teal: #{$color-accent-teal};
+    --color-accent-indigo: #{$color-accent-indigo};
+    --color-accent-red: #{$color-accent-red};
+
+    // Accents (RGB for rgba() usage with CSS variables)
+    --color-accent-blue-rgb: 96, 165, 250;
+    --color-accent-purple-rgb: 192, 132, 252;
+    --color-accent-pink-rgb: 251, 113, 133;
+    --color-accent-amber-rgb: 251, 191, 36;
+    --color-accent-green-rgb: 52, 211, 153;
+    --color-accent-teal-rgb: 125, 211, 252;
+    --color-accent-indigo-rgb: 167, 139, 250;
+    --color-accent-red-rgb: 248, 113, 113;
+
+    // Status
+    --color-success: #{$color-success};
+    --color-warning: #{$color-warning};
+    --color-error: #{$color-error};
+    --color-info: #{$color-info};
+
+    // Glass
+    --color-glass-panel: #{$color-glass-panel};
+  }
+}

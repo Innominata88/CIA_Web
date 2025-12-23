@@ -1,0 +1,118 @@
+// src/ui/react/hooks/index.js
+// React hook exports
+//
+// UPDATED: Added useAsyncData, useWebSocketEvents, and refactored hooks
+
+// =============================================================================
+// SHARED DATA FETCHING UTILITIES (NEW)
+// =============================================================================
+
+export { useAsyncData, useAsyncMutation } from "./useAsyncData.js";
+
+export {
+  useWebSocketEvents,
+  useWebSocketEvent,
+  useServerSyncEvents,
+  dispatchMockWSEvent,
+} from "./useWebSocketEvents.js";
+
+// =============================================================================
+// AUTHENTICATION
+// =============================================================================
+
+export { useAuth } from "./useAuth.js";
+
+// =============================================================================
+// CANVAS & VIEWPORT
+// =============================================================================
+
+export { useCanvas, useViewport, useSubsets } from "./useCanvas.js";
+export { useCanvasSelection } from "./useCanvasSelection.js";
+export { useCanvasDimensions } from "./useCanvasDimensions.js";
+export { useViewportSize } from "./useViewportSize.js";
+export {
+  VIEWPORT_STORAGE_KEY,
+  VIEWPORT_SIZE_EVENT,
+  DEFAULT_VIEWPORT_SIZE,
+  VIEWPORT_SIZE_PRESETS,
+} from "./viewportState.js";
+export {
+  CANVAS_SIZE_STORAGE_KEY,
+  loadCanvasSize,
+  saveCanvasSize,
+} from "./canvasState.js";
+
+// =============================================================================
+// DATA MANAGEMENT (REFACTORED)
+// =============================================================================
+
+export { useDatasets } from "./useDatasets.js";
+export { useInstances } from "./useInstances.js";
+export { useProjectFiles, useAllAccessibleFiles } from "./useProjectFiles.js";
+
+// =============================================================================
+// COMPUTE JOBS
+// =============================================================================
+
+export {
+  useComputeJobs,
+  useComputeOperations,
+  JobStatus,
+} from "./useComputeJobs.js";
+
+// =============================================================================
+// UI UTILITIES
+// =============================================================================
+
+export { useSmartDropdownPosition } from "./useSmartDropdownPosition.js";
+export { useLogging } from "./useLogging.js";
+
+// =============================================================================
+// DATASET MANAGER (LOW-LEVEL)
+// =============================================================================
+
+export { useDatasetManager } from "./useDatasetManager.js";
+
+// =============================================================================
+// FEATURES (REFACTORED - use shared patterns internally)
+// =============================================================================
+
+export { useFilters } from "./useFilters.js";
+export { useBookmarks } from "./useBookmarks.js";
+export { useAnnotations } from "./useAnnotations.js";
+
+export {
+  useThumbnail,
+  useThumbnailUrl,
+  THUMBNAIL_STATUS,
+} from "./useThumbnail.js";
+
+export {
+  useViewMetadata,
+  useViewDisplayName,
+  useViewColor,
+} from "./useViewMetadata.js";
+
+// =============================================================================
+// WORKSPACE & VOICE BAR HOOKS
+// =============================================================================
+
+export {
+  useWorkspaceSelector,
+  useViewMode,
+  useWorkspacePresence,
+  useSecondaryTopBar,
+  VIEW_MODES as WORKSPACE_VIEW_MODES,
+  WORKSPACE_TYPES,
+} from "./useWorkspaceBar.js";
+
+export {
+  useCanvasViewport,
+  useVoiceControls,
+  useWorkspaceIndicator,
+  useSecondaryBottomBar,
+} from "./useVoiceBar.js";
+
+export { useRoomIndicator } from "./useRoomIndicator.js";
+
+export { useSecondaryHeaderLogic } from "./useSecondaryHeaderLogic.js";
