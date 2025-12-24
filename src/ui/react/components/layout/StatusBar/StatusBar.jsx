@@ -3,13 +3,6 @@
 // Matches artifact design with left/center/right zones
 
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-    AlertTriangle,
-    Circle,
-    Pause,
-    Square,
-    Cpu,
-} from 'lucide-react';
 import { Icon } from '@UI/react/components/common/Icon';
 
 import { presenceSystem } from '@Collaboration/presence/presenceSystem.js';
@@ -84,7 +77,8 @@ function OnlineUsersIndicator({ count }) {
                             const statusColor = getStatusColorHex(user.status);
                             return (
                                 <div key={user.userId} className="online-popover__user">
-                                    <Circle
+                                    <Icon
+                                        name="circle"
                                         size={8}
                                         fill={statusColor}
                                         stroke={statusColor}
@@ -121,7 +115,7 @@ function WarningsIndicator({ count }) {
 
     return (
         <div className="status-bar__item status-bar__item--warning">
-            <AlertTriangle size={10} />
+            <Icon name="alertTriangle" size={10} />
             <span>{count} {count === 1 ? 'warning' : 'warnings'}</span>
         </div>
     );
@@ -192,7 +186,8 @@ function RecordingControls({
                 onClick={onClick}
                 title="Open Recording panel"
             >
-                <Circle
+                <Icon
+                    name="circle"
                     size={8}
                     className={`status-bar__recording-dot ${isPaused ? 'paused' : ''}`}
                 />
@@ -204,14 +199,14 @@ function RecordingControls({
                 onClick={onPause}
                 title={isPaused ? 'Resume' : 'Pause'}
             >
-                <Pause size={10} />
+                <Icon name="pause" size={10} />
             </button>
             <button
                 className="status-bar__recording-btn status-bar__recording-btn--stop"
                 onClick={onStop}
                 title="Stop recording"
             >
-                <Square size={10} />
+                <Icon name="square" size={10} />
             </button>
         </div>
     );
@@ -233,7 +228,7 @@ function MemoryUsage({ gpuUsage, ramUsage, onClick }) {
             onClick={onClick}
             title="Click for memory breakdown"
         >
-            <Cpu size={10} />
+            <Icon name="cpu" size={10} />
             <span>{ramUsage}%</span>
         </button>
     );
@@ -537,7 +532,7 @@ export function StatusBar() {
                         onClick={handleWarningsClick}
                         title="Click to view logs"
                     >
-                        <AlertTriangle size={12} />
+                        <Icon name="alertTriangle" size={12} />
                         <span>{warningCount}</span>
                     </button>
                 )}

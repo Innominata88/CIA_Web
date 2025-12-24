@@ -4,9 +4,6 @@
  */
 
 import React from 'react';
-import {
-    Keyboard,
-} from 'lucide-react';
 import { Icon } from '@UI/react/components/common/Icon';
 import { Dropdown } from '@UI/react/components/common/Dropdown';
 
@@ -39,7 +36,7 @@ export function UserMenu({ user, onNavigate, onSignOut }) {
         },
         {
             id: 'shortcuts',
-            icon: Keyboard,
+            icon: 'keyboard',
             label: 'Keyboard Shortcuts',
             action: 'shortcuts',
         },

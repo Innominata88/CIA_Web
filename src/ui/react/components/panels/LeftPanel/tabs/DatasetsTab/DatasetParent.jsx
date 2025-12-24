@@ -2,7 +2,7 @@
 // Parent/folder node for a dataset in the tree view
 
 import React, { useState, useCallback } from 'react';
-import { ChevronDown, ChevronRight, MoreHorizontal, Settings } from 'lucide-react';
+import { Icon } from '@UI/react/components/common/Icon';
 import * as LucideIcons from 'lucide-react';
 import { getFileTypeDisplayInfo } from '@Core/instances/types/instanceTypesInit.js';
 import { DatasetSettingsModal } from '@UI/react/components/modals/DatasetSettingsModal';
@@ -67,7 +67,7 @@ export function DatasetParent({
                 onMouseLeave={() => setIsHovered(false)}
             >
                 <span className="dataset-parent__chevron">
-                    {isExpanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
+                    {isExpanded ? <Icon name="chevronDown" size={10} /> : <Icon name="chevronRight" size={10} />}
                 </span>
 
                 <span
@@ -95,13 +95,13 @@ export function DatasetParent({
                             }}
                             title="Dataset settings"
                         >
-                            <Settings size={12} />
+                            <Icon name="settings" size={12} />
                         </button>
                         <button
                             className="dataset-parent__more-btn"
                             onClick={(e) => { e.stopPropagation(); handleContextMenu(e); }}
                         >
-                            <MoreHorizontal size={12} />
+                            <Icon name="moreHorizontal" size={12} />
                         </button>
                     </>
                 )}

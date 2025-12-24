@@ -1,6 +1,5 @@
 // src/ui/react/components/layout/ResizablePanel.stories.jsx
 import React, { useState } from "react";
-import { Files } from 'lucide-react';
 import { Icon } from '@UI/react/components/common/Icon';
 import { ResizablePanel } from "./ResizablePanel";
 import '@UI/react/components/layout/ThreeEdgeLayout/ThreeEdgeLayout.scss';
@@ -48,7 +47,7 @@ const SamplePanelContent = ({ isCollapsed, onToggle, side, title = "Panel" }) =>
                 >
                     {side === "left" ? <Icon name="chevronRight" size={18} /> : <Icon name="chevronLeft" size={18} />}
                 </button>
-                <Files size={18} style={{ color: "#808080" }} />
+                <Icon name="files" size={18} style={{ color: "#808080" }} />
                 <Icon name="settings" size={18} style={{ color: "#808080" }} />
             </div>
         ) : (

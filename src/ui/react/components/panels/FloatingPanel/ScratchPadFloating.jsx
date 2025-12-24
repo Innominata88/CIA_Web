@@ -5,7 +5,7 @@
 // Uses the FloatingPanel system for position/size management.
 
 import React, { memo, useCallback } from "react";
-import { StickyNote } from 'lucide-react';
+import { Icon } from '@UI/react/components/common/Icon';
 import { FloatingPanel } from "./FloatingPanel";
 import { useFloatingPanels } from "./FloatingPanelContext";
 import { ScratchPad, useScratchPad } from "@UI/react/components/workspace/ScratchPad";

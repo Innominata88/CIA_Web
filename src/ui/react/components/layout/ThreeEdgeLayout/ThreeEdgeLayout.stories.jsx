@@ -1,12 +1,5 @@
 // src/ui/react/components/layout/ThreeEdgeLayout/ThreeEdgeLayout.stories.jsx
 import React from "react";
-import {
-    Files,
-    Play,
-    Folder,
-    MessageSquare,
-    Glasses,
-} from 'lucide-react';
 import { Icon } from '@UI/react/components/common/Icon';
 import { ThreeEdgeLayout, useLayoutContext } from "./ThreeEdgeLayout";
 import "./ThreeEdgeLayout.scss";
@@ -39,13 +32,13 @@ const MockLeftPanel = ({ isCollapsed, onToggle, side }) => (
                     style={{ background: "none", border: "none", color: "#808080", cursor: "pointer", padding: "8px" }}
                     title="Expand panel"
                 >
-                    <Files size={20} />
+                    <Icon name="files" size={20} />
                 </button>
                 <button style={{ background: "none", border: "none", color: "#808080", cursor: "pointer", padding: "8px" }}>
-                    <Folder size={20} />
+                    <Icon name="folder" size={20} />
                 </button>
                 <button style={{ background: "none", border: "none", color: "#808080", cursor: "pointer", padding: "8px" }}>
-                    <Settings size={20} />
+                    <Icon name="settings" size={20} />
                 </button>
             </div>
         ) : (
@@ -75,7 +68,7 @@ const MockRightPanel = ({ isCollapsed, onToggle }) => (
                     <Icon name="users" size={20} />
                 </button>
                 <button style={{ background: "none", border: "none", color: "#808080", cursor: "pointer", padding: "8px" }}>
-                    <MessageSquare size={20} />
+                    <Icon name="messageSquare" size={20} />
                 </button>
             </div>
         ) : (
@@ -100,7 +93,7 @@ const MockRightPanel = ({ isCollapsed, onToggle }) => (
 const MockCenterPanel = () => (
     <div style={{ height: "100%", background: "#0a0a0f", display: "flex", alignItems: "center", justifyContent: "center", color: "#404040" }}>
         <div style={{ textAlign: "center" }}>
-            <Play size={48} strokeWidth={1} />
+            <Icon name="play" size={48} strokeWidth={1} />
             <p style={{ marginTop: "16px", fontSize: "14px" }}>Workspace Area</p>
             <p style={{ fontSize: "12px", color: "#333" }}>Visualization instances appear here</p>
         </div>
@@ -252,7 +245,7 @@ const MockSecondaryBottomBar = ({ leftPanelWidth, rightPanelWidth, leftPanelOpen
                             gap: "4px",
                         }}
                     >
-                        <Glasses size={10} />
+                        <Icon name="glasses" size={10} />
                         VR
                     </button>
                 </div>

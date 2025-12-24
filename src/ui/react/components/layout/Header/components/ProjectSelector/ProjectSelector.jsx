@@ -4,7 +4,6 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import { Folder } from 'lucide-react';
 import { Icon } from '@UI/react/components/common/Icon';
 import { Dropdown } from '@UI/react/components/common/Dropdown';
 
@@ -55,7 +54,7 @@ export function ProjectSelector({
         <Dropdown
             trigger={
                 <button className="project-selector__trigger" type="button">
-                    <Folder size={16} />
+                    <Icon name="folder" size={16} />
                     <span className="project-selector__name">
                         {currentProject?.name || 'Select Project'}
                     </span>

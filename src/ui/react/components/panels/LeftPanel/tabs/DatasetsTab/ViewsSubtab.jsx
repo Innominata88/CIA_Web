@@ -9,14 +9,7 @@
  */
 
 import { memo, useState, useCallback, useMemo } from 'react';
-import {
-    ArrowUpDown,
-    ChevronDown,
-    LayoutGrid,
-    Database,
-    Clock,
-    SortAsc,
-} from 'lucide-react';
+import { Icon } from '@UI/react/components/common/Icon';
 import { ViewItem } from './ViewItem';
 import { DatasetContextHeader } from './DatasetContextHeader';
 import './ViewsSubtab.scss';
@@ -141,9 +134,9 @@ export const ViewsSubtab = memo(function ViewsSubtab({
                             setGroupMenuOpen(false);
                         }}
                     >
-                        <ArrowUpDown size={12} />
+                        <Icon name="arrowUpDown" size={12} />
                         <span>Sort: {SORT_OPTIONS.find(o => o.id === sortBy)?.label}</span>
-                        <ChevronDown size={12} />
+                        <Icon name="chevronDown" size={12} />
                     </button>
 
                     {sortMenuOpen && (
@@ -177,9 +170,9 @@ export const ViewsSubtab = memo(function ViewsSubtab({
                             setSortMenuOpen(false);
                         }}
                     >
-                        <LayoutGrid size={12} />
+                        <Icon name="layoutGrid" size={12} />
                         <span>Group: {GROUP_OPTIONS.find(o => o.id === groupBy)?.label}</span>
-                        <ChevronDown size={12} />
+                        <Icon name="chevronDown" size={12} />
                     </button>
 
                     {groupMenuOpen && (

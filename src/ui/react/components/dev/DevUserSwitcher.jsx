@@ -7,7 +7,6 @@
 // Place this in the Header or SecondaryFooter for easy access.
 
 import React, { useState, useRef, useEffect, memo } from "react";
-import { Building } from 'lucide-react';
 import { Icon } from '@UI/react/components/common/Icon';
 import { useDevUser } from "@UI/react/context/DevUserContext.jsx";
 import { getUserInitials } from "@Config/mockUsers.js";
@@ -148,7 +147,7 @@ export const DevUserSwitcher = memo(function DevUserSwitcher({
                                         </span>
                                         {user.department && (
                                             <span className="dev-user-switcher__option-dept">
-                                                <Building size={10} />
+                                                <Icon name="building" size={10} />
                                                 {user.department}
                                             </span>
                                         )}

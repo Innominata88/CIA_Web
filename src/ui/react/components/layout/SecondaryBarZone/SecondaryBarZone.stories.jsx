@@ -2,17 +2,6 @@
 // Storybook stories demonstrating the SecondaryBarZone system
 
 import React, { useState } from 'react';
-import {
-    Glasses,
-    Grid3X3,
-    Maximize2,
-    RotateCcw,
-    Link2,
-    Share2,
-    Navigation,
-    Layers,
-    Radio,
-} from 'lucide-react';
 import { Icon } from '@UI/react/components/common/Icon';
 
 import {
@@ -91,14 +80,14 @@ const ViewModeToggle = () => {
                 className={`secondary-bar-toggle ${mode === 'normal' ? 'secondary-bar-toggle--active' : ''}`}
                 onClick={() => setMode('normal')}
             >
-                <Grid3X3 size={12} />
+                <Icon name="grid" size={12} />
                 <span>Normal</span>
             </button>
             <button
                 className={`secondary-bar-toggle ${mode === 'isolation' ? 'secondary-bar-toggle--active' : ''}`}
                 onClick={() => setMode('isolation')}
             >
-                <Maximize2 size={12} />
+                <Icon name="maximize" size={12} />
                 <span>Isolation</span>
             </button>
         </div>
@@ -120,7 +109,7 @@ const VRDesktopToggle = () => {
                 className={`secondary-bar-toggle ${mode === 'vr' ? 'secondary-bar-toggle--active' : ''}`}
                 onClick={() => setMode('vr')}
             >
-                <Glasses size={12} />
+                <Icon name="glasses" size={12} />
                 <span>VR</span>
             </button>
         </div>
@@ -138,7 +127,7 @@ const PresenceAvatars = () => (
 
 const CanvasIndicator = () => (
     <div className="secondary-bar-indicator">
-        <Navigation size={10} className="secondary-bar-indicator__icon" />
+        <Icon name="navigation" size={10} className="secondary-bar-indicator__icon" />
         <span className="secondary-bar-indicator__value">(0,0) → (2,1)</span>
         <span className="secondary-bar-indicator__label">of 5×4</span>
     </div>
@@ -146,7 +135,7 @@ const CanvasIndicator = () => (
 
 const InstanceCounter = () => (
     <div className="secondary-bar-indicator">
-        <Layers size={10} className="secondary-bar-indicator__icon" />
+        <Icon name="layers" size={10} className="secondary-bar-indicator__icon" />
         <span className="secondary-bar-indicator__value">3</span>
         <span className="secondary-bar-indicator__label">instances</span>
     </div>
@@ -154,7 +143,7 @@ const InstanceCounter = () => (
 
 const VoiceIndicator = () => (
     <button className="secondary-bar-action secondary-bar-action--active" style={{ background: 'rgba(76, 175, 80, 0.15)', borderColor: 'rgba(76, 175, 80, 0.3)', color: '#81c784' }}>
-        <Radio size={12} />
+        <Icon name="radio" size={12} />
         <span>Main Room</span>
         <Icon name="mic" size={12} />
     </button>
@@ -185,15 +174,15 @@ export const SecondaryTopBarExample = {
                         <span>Add Cell</span>
                     </button>
                     <button className="secondary-bar-action secondary-bar-action--icon">
-                        <RotateCcw size={12} />
+                        <Icon name="rotateCcw" size={12} />
                     </button>
                     <SecondaryBarSpacer />
                     <button className="secondary-bar-action">
-                        <Link2 size={12} />
+                        <Icon name="link" size={12} />
                         <span>Link Views</span>
                     </button>
                     <button className="secondary-bar-action secondary-bar-action--primary">
-                        <Share2 size={12} />
+                        <Icon name="share" size={12} />
                         <span>Share</span>
                     </button>
                 </SecondaryBarZone>

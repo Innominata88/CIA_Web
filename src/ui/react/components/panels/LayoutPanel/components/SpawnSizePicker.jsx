@@ -6,7 +6,7 @@
  */
 
 import React, { memo, useState, useCallback } from 'react';
-import { Check, X } from 'lucide-react';
+import { Icon } from '@UI/react/components/common/Icon';
 import './SpawnSizePicker.scss';
 
 // Preset size options

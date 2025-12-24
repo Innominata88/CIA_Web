@@ -23,12 +23,6 @@
  */
 
 import React, { useCallback, memo } from 'react';
-import {
-    Map, StickyNote,
-    ArrowRight, ArrowDown,
-    MousePointer2, Hand, Combine, Pencil,
-    Undo2, Redo2,
-} from 'lucide-react';
 
 // Shared bar components (from common bars/ folder)
 import {
@@ -47,17 +41,16 @@ import './SecondaryFooter.scss';
 // CONSTANTS
 // =============================================================================
 
-// Note: These icons are passed as component references to SegmentedToggle/LabeledIconButton/IconButton
-// which expect Lucide components, not Icon names
+// Icons are now string names for the Icon component
 const FLOW_OPTIONS = [
-    { value: 'row', icon: ArrowRight, label: 'Row Flow', accent: 'var(--color-accent-blue)' },
-    { value: 'column', icon: ArrowDown, label: 'Column Flow', accent: 'var(--color-accent-blue)' },
+    { value: 'row', icon: 'arrowRight', label: 'Row Flow', accent: 'var(--color-accent-blue)' },
+    { value: 'column', icon: 'arrowDown', label: 'Column Flow', accent: 'var(--color-accent-blue)' },
 ];
 
 const EDIT_TOOLS = [
-    { id: 'select', icon: MousePointer2, label: 'Select', accent: 'var(--color-accent-blue)' },
-    { id: 'pan', icon: Hand, label: 'Pan', accent: 'var(--color-accent-teal)' },
-    { id: 'merge', icon: Combine, label: 'Merge Cells', accent: 'var(--color-accent-purple)' },
+    { id: 'select', icon: 'mousePointer', label: 'Select', accent: 'var(--color-accent-blue)' },
+    { id: 'pan', icon: 'hand', label: 'Pan', accent: 'var(--color-accent-teal)' },
+    { id: 'merge', icon: 'combine', label: 'Merge Cells', accent: 'var(--color-accent-purple)' },
 ];
 
 // =============================================================================
@@ -120,14 +113,14 @@ function SecondaryFooter({
             {/* ================================================================= */}
             <div className="secondary-footer__zone secondary-footer__zone--left">
                 <LabeledIconButton
-                    icon={Map}
+                    icon="map"
                     label="Navigator"
                     active={navigatorOpen}
                     accent="var(--color-accent-teal)"
                     onClick={onToggleNavigator}
                 />
                 <LabeledIconButton
-                    icon={StickyNote}
+                    icon="stickyNote"
                     label="Scratchpad"
                     active={scratchpadOpen}
                     accent="var(--color-accent-amber)"
@@ -162,7 +155,7 @@ function SecondaryFooter({
                     ))}
                     <div className="secondary-footer__divider secondary-footer__divider--small" />
                     <IconButton
-                        icon={Pencil}
+                        icon="pencil"
                         label="Toggle Edit Mode"
                         active={isEditMode}
                         size="sm"
@@ -175,14 +168,14 @@ function SecondaryFooter({
                 {/* Undo/Redo */}
                 <ButtonGroup gap="sm">
                     <IconButton
-                        icon={Undo2}
+                        icon="undo"
                         label="Undo"
                         size="sm"
                         disabled={!canUndo}
                         onClick={onUndo}
                     />
                     <IconButton
-                        icon={Redo2}
+                        icon="redo"
                         label="Redo"
                         size="sm"
                         disabled={!canRedo}
