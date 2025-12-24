@@ -24,8 +24,7 @@
  */
 
 import React, { memo, useState, useCallback } from 'react';
-import { Icon } from '@UI/react/components/common/Icon';
-import * as LucideIcons from 'lucide-react';
+import { Icon, getLucideIcon } from '@UI/react/components/common/Icon';
 import { Tooltip } from '@UI/react/components/common/Tooltip';
 import { getFileTypeDisplayInfo } from '@Core/instances/types/instanceTypesInit.js';
 import { formatFileSize, formatRelativeTime } from '@Utils/formatters.js';
@@ -62,10 +61,9 @@ import './DatasetNode.scss';
 function getDatasetIcon(fileType) {
     const displayInfo = getFileTypeDisplayInfo(fileType);
     if (displayInfo?.icon) {
-        const iconName = displayInfo.icon.charAt(0).toUpperCase() + displayInfo.icon.slice(1);
-        return LucideIcons[iconName] || LucideIcons.Database;
+        return getLucideIcon(displayInfo.icon);
     }
-    return LucideIcons.Database;
+    return getLucideIcon('Database');
 }
 
 /**
@@ -87,7 +85,7 @@ export const DatasetNode = memo(function DatasetNode({
     const [menuOpen, setMenuOpen] = useState(false);
     const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-    const Icon = getDatasetIcon(dataset.fileType);
+    const TypeIcon = getDatasetIcon(dataset.fileType);
     const displayInfo = getFileTypeDisplayInfo(dataset.fileType);
     const viewCount = views.length;
     const activeViewCount = views.filter((v) => v.status === 'active').length;
@@ -164,7 +162,7 @@ export const DatasetNode = memo(function DatasetNode({
                         className="dataset-node__icon"
                         style={{ color: displayInfo?.color }}
                     >
-                        <Icon size={14} />
+                        <TypeIcon size={14} />
                     </span>
                 </Tooltip>
 

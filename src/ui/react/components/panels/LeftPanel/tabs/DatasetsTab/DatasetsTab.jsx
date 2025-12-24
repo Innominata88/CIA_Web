@@ -16,8 +16,7 @@
  */
 
 import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { Icon } from '@UI/react/components/common/Icon';
-import * as LucideIcons from 'lucide-react';
+import { Icon, getLucideIcon } from '@UI/react/components/common/Icon';
 import { ChipGroup } from '@UI/react/components/common/ChipGroup';
 import { useDatasets } from '@UI/react/hooks/useDatasets.js';
 import { getFileTypeDisplayInfo } from '@Core/instances/types/instanceTypesInit.js';
@@ -36,9 +35,9 @@ import './DatasetsTab.scss';
 // =============================================================================
 
 const getFilterChips = (counts) => [
-    { id: 'active', label: 'Active', icon: Eye, color: 'green', count: counts.active },
-    { id: 'inactive', label: 'Inactive', icon: Archive, color: 'gray', count: counts.inactive },
-    { id: 'shared', label: 'Shared', icon: Users, color: 'pink', count: counts.shared },
+    { id: 'active', label: 'Active', icon: 'eye', color: 'green', count: counts.active },
+    { id: 'inactive', label: 'Inactive', icon: 'archive', color: 'gray', count: counts.inactive },
+    { id: 'shared', label: 'Shared', icon: 'users', color: 'pink', count: counts.shared },
 ];
 
 // =============================================================================
@@ -49,8 +48,7 @@ const getDatasetTypeConfig = (fileType) => {
     const displayInfo = getFileTypeDisplayInfo(fileType);
 
     if (displayInfo) {
-        const iconName = displayInfo.icon.charAt(0).toUpperCase() + displayInfo.icon.slice(1);
-        const IconComponent = LucideIcons[iconName] || LucideIcons.Box;
+        const IconComponent = getLucideIcon(displayInfo.icon);
 
         return {
             icon: IconComponent,
@@ -60,7 +58,7 @@ const getDatasetTypeConfig = (fileType) => {
     }
 
     return {
-        icon: LucideIcons.Database,
+        icon: getLucideIcon('Database'),
         color: '#6B7280',
         label: fileType?.toUpperCase() || 'Data',
     };

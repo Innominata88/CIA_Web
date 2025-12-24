@@ -8,8 +8,7 @@
  */
 
 import React, { useState, memo } from 'react';
-import { Icon } from '@UI/react/components/common/Icon';
-import * as LucideIcons from 'lucide-react';
+import { Icon, getLucideIcon } from '@UI/react/components/common/Icon';
 import { getFileTypeDisplayInfo } from '@Core/instances/types/instanceTypesInit.js';
 import { FileThumbnail } from './FileThumbnail';
 
@@ -20,14 +19,13 @@ import { FileThumbnail } from './FileThumbnail';
  */
 export const getFileTypeConfig = (file) => {
     if (file.isFolder) {
-        return { icon: Folder, colorClass: 'file-icon--folder', color: null };
+        return { icon: getLucideIcon('Folder'), colorClass: 'file-icon--folder', color: null };
     }
 
     const displayInfo = getFileTypeDisplayInfo(file.fileType);
 
     if (displayInfo) {
-        const iconName = displayInfo.icon.charAt(0).toUpperCase() + displayInfo.icon.slice(1);
-        const IconComponent = LucideIcons[iconName] || LucideIcons.Box;
+        const IconComponent = getLucideIcon(displayInfo.icon);
 
         return {
             icon: IconComponent,
@@ -36,7 +34,7 @@ export const getFileTypeConfig = (file) => {
         };
     }
 
-    return { icon: FileText, colorClass: 'file-icon--default', color: null };
+    return { icon: getLucideIcon('FileText'), colorClass: 'file-icon--default', color: null };
 };
 
 /**
