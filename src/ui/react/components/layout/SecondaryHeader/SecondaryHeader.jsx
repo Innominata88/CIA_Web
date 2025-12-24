@@ -46,6 +46,8 @@ import './SecondaryHeader.scss';
 // CONSTANTS
 // =============================================================================
 
+// Note: These icons (LayoutGrid, Maximize2, Layers) are passed as component references
+// to SegmentedToggle which expects Lucide components, not Icon names
 const VIEW_MODE_OPTIONS = [
     { value: 'normal', icon: LayoutGrid, label: 'Normal View', accent: 'var(--color-accent-blue)' },
     { value: 'isolation', icon: Maximize2, label: 'Isolation Mode', accent: 'var(--color-accent-amber)' },

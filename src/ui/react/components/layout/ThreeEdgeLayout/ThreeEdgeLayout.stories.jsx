@@ -2,16 +2,12 @@
 import React from "react";
 import {
     Files,
-    Users,
-    Settings,
     Play,
     Folder,
     MessageSquare,
-    Monitor,
     Glasses,
-    ChevronDown,
-    Globe,
 } from 'lucide-react';
+import { Icon } from '@UI/react/components/common/Icon';
 import { ThreeEdgeLayout, useLayoutContext } from "./ThreeEdgeLayout";
 import "./ThreeEdgeLayout.scss";
 
@@ -76,7 +72,7 @@ const MockRightPanel = ({ isCollapsed, onToggle }) => (
         {isCollapsed ? (
             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "12px 0", gap: "16px" }}>
                 <button onClick={onToggle} style={{ background: "none", border: "none", color: "#808080", cursor: "pointer", padding: "8px" }} title="Expand panel">
-                    <Users size={20} />
+                    <Icon name="users" size={20} />
                 </button>
                 <button style={{ background: "none", border: "none", color: "#808080", cursor: "pointer", padding: "8px" }}>
                     <MessageSquare size={20} />
@@ -152,11 +148,11 @@ const MockSecondaryTopBar = ({ leftPanelWidth, rightPanelWidth, leftPanelOpen, r
                 gap: "8px",
                 transition: "width 0.2s ease",
             }}>
-                <Globe size={14} style={{ color: "#60a5fa" }} />
+                <Icon name="globe" size={14} style={{ color: "#60a5fa" }} />
                 <span style={{ fontSize: "12px", color: "#e0e0e0", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     Team Analysis
                 </span>
-                <ChevronDown size={12} style={{ color: "#808080" }} />
+                <Icon name="chevronDown" size={12} style={{ color: "#808080" }} />
             </div>
 
             {/* Center Zone - Controls */}
@@ -238,7 +234,7 @@ const MockSecondaryBottomBar = ({ leftPanelWidth, rightPanelWidth, leftPanelOpen
                             gap: "4px",
                         }}
                     >
-                        <Monitor size={10} />
+                        <Icon name="monitor" size={10} />
                         Desktop
                     </button>
                     <button

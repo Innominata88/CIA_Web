@@ -7,7 +7,8 @@
 // Place this in the Header or SecondaryFooter for easy access.
 
 import React, { useState, useRef, useEffect, memo } from "react";
-import { Users, ChevronDown, Check, Building, UserCircle } from 'lucide-react';
+import { Building } from 'lucide-react';
+import { Icon } from '@UI/react/components/common/Icon';
 import { useDevUser } from "@UI/react/context/DevUserContext.jsx";
 import { getUserInitials } from "@Config/mockUsers.js";
 import "./DevUserSwitcher.scss";
@@ -111,7 +112,8 @@ export const DevUserSwitcher = memo(function DevUserSwitcher({
                     </span>
                 )}
 
-                <ChevronDown
+                <Icon
+                    name="chevronDown"
                     size={12}
                     className={`dev-user-switcher__chevron ${isOpen ? "dev-user-switcher__chevron--open" : ""}`}
                 />
@@ -124,7 +126,7 @@ export const DevUserSwitcher = memo(function DevUserSwitcher({
             {isOpen && (
                 <div className="dev-user-switcher__dropdown">
                     <div className="dev-user-switcher__header">
-                        <Users size={14} />
+                        <Icon name="users" size={14} />
                         <span>Switch User</span>
                     </div>
 
@@ -153,7 +155,7 @@ export const DevUserSwitcher = memo(function DevUserSwitcher({
                                     </div>
 
                                     {isSelected && (
-                                        <Check size={14} className="dev-user-switcher__check" />
+                                        <Icon name="check" size={14} className="dev-user-switcher__check" />
                                     )}
                                 </button>
                             );

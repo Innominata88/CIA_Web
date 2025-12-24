@@ -5,13 +5,9 @@
 
 import React from 'react';
 import {
-    ChevronDown,
-    User,
-    Settings,
     Keyboard,
-    Shield,
-    LogOut,
 } from 'lucide-react';
+import { Icon } from '@UI/react/components/common/Icon';
 import { Dropdown } from '@UI/react/components/common/Dropdown';
 
 /**
@@ -31,13 +27,13 @@ export function UserMenu({ user, onNavigate, onSignOut }) {
     const menuItems = [
         {
             id: 'profile',
-            icon: User,
+            icon: 'user',
             label: 'Profile',
             path: '/profile',
         },
         {
             id: 'settings',
-            icon: Settings,
+            icon: 'settings',
             label: 'Settings',
             path: '/settings',
         },
@@ -53,7 +49,7 @@ export function UserMenu({ user, onNavigate, onSignOut }) {
     if (user?.isAdmin) {
         menuItems.push({
             id: 'admin',
-            icon: Shield,
+            icon: 'shield',
             label: 'Admin',
             path: '/admin',
         });
@@ -92,10 +88,10 @@ export function UserMenu({ user, onNavigate, onSignOut }) {
                         {user?.avatar ? (
                             <img src={user.avatar} alt={user.name} />
                         ) : (
-                            <User size={16} />
+                            <Icon name="user" size={16} />
                         )}
                     </div>
-                    <ChevronDown size={14} />
+                    <Icon name="chevronDown" size={14} />
                 </button>
             }
             placement="bottom-end"
@@ -135,7 +131,11 @@ export function UserMenu({ user, onNavigate, onSignOut }) {
                         onClick={() => handleItemClick(item)}
                         type="button"
                     >
-                        <item.icon size={16} />
+                        {typeof item.icon === 'string' ? (
+                            <Icon name={item.icon} size={16} />
+                        ) : (
+                            <item.icon size={16} />
+                        )}
                         {item.label}
                     </button>
                 ))}
@@ -148,7 +148,7 @@ export function UserMenu({ user, onNavigate, onSignOut }) {
                     onClick={onSignOut}
                     type="button"
                 >
-                    <LogOut size={16} />
+                    <Icon name="logout" size={16} />
                     Sign Out
                 </button>
             </div>

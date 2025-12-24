@@ -3,21 +3,17 @@
 
 import React, { useState } from 'react';
 import {
-    Globe,
-    ChevronDown,
-    Monitor,
     Glasses,
     Grid3X3,
     Maximize2,
-    Plus,
     RotateCcw,
     Link2,
     Share2,
     Navigation,
     Layers,
     Radio,
-    Mic,
 } from 'lucide-react';
+import { Icon } from '@UI/react/components/common/Icon';
 
 import {
     SecondaryBar,
@@ -81,9 +77,9 @@ const LayoutContextDecorator = ({
 
 const WorkspaceDropdown = () => (
     <button className="secondary-bar-action" style={{ gap: '8px', minWidth: '140px' }}>
-        <Globe size={14} style={{ color: '#60a5fa' }} />
+        <Icon name="globe" size={14} style={{ color: '#60a5fa' }} />
         <span style={{ flex: 1, textAlign: 'left' }}>Team Analysis</span>
-        <ChevronDown size={12} />
+        <Icon name="chevronDown" size={12} />
     </button>
 );
 
@@ -117,7 +113,7 @@ const VRDesktopToggle = () => {
                 className={`secondary-bar-toggle ${mode === 'desktop' ? 'secondary-bar-toggle--active' : ''}`}
                 onClick={() => setMode('desktop')}
             >
-                <Monitor size={12} />
+                <Icon name="monitor" size={12} />
                 <span>Desktop</span>
             </button>
             <button
@@ -160,7 +156,7 @@ const VoiceIndicator = () => (
     <button className="secondary-bar-action secondary-bar-action--active" style={{ background: 'rgba(76, 175, 80, 0.15)', borderColor: 'rgba(76, 175, 80, 0.3)', color: '#81c784' }}>
         <Radio size={12} />
         <span>Main Room</span>
-        <Mic size={12} />
+        <Icon name="mic" size={12} />
     </button>
 );
 
@@ -185,7 +181,7 @@ export const SecondaryTopBarExample = {
                     <ViewModeToggle />
                     <SecondaryBarDivider />
                     <button className="secondary-bar-action">
-                        <Plus size={12} />
+                        <Icon name="add" size={12} />
                         <span>Add Cell</span>
                     </button>
                     <button className="secondary-bar-action secondary-bar-action--icon">

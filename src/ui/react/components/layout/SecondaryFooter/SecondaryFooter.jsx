@@ -47,6 +47,8 @@ import './SecondaryFooter.scss';
 // CONSTANTS
 // =============================================================================
 
+// Note: These icons are passed as component references to SegmentedToggle/LabeledIconButton/IconButton
+// which expect Lucide components, not Icon names
 const FLOW_OPTIONS = [
     { value: 'row', icon: ArrowRight, label: 'Row Flow', accent: 'var(--color-accent-blue)' },
     { value: 'column', icon: ArrowDown, label: 'Column Flow', accent: 'var(--color-accent-blue)' },
