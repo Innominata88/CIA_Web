@@ -26,20 +26,7 @@
  */
 
 import React, { memo, useCallback, useState } from 'react';
-import {
-    Mail,
-    Clock,
-    Eye,
-    MessageSquare,
-    Phone,
-    Navigation,
-    Copy,
-    Check,
-    Crown,
-    Shield,
-    User,
-    UserCheck
-} from 'lucide-react';
+import { Icon, getIconComponent } from '/react/components/common/Icon';
 import Modal from '../Modal/Modal';
 import { Button } from '../../common/Button';
 import { STATUS_CONFIG, getStatusLabel } from '@UI/react/utils/statusConfig';

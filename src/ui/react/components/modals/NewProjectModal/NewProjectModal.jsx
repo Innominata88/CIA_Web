@@ -25,16 +25,7 @@
  */
 
 import React, { memo, useState, useCallback, useEffect } from 'react';
-import {
-    FolderPlus,
-    File,
-    FlaskConical,
-    BarChart3,
-    Users,
-    Lock,
-    Building,
-    Check
-} from 'lucide-react';
+import { Icon, getIconComponent } from '/react/components/common/Icon';
 import { FormModal, FormField } from '../FormModal';
 import './NewProjectModal.scss';
 

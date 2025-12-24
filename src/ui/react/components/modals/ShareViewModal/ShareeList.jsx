@@ -20,7 +20,7 @@
  */
 
 import React, { memo, useCallback } from 'react';
-import { X, Users } from 'lucide-react';
+import { Icon, getIconComponent } from '/react/components/common/Icon';
 import { DropdownSelect } from '../../common/Dropdown';
 import { getInitials } from './PersonSearch';
 

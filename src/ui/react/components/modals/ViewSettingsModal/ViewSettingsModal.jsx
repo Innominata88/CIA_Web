@@ -26,30 +26,7 @@
  */
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import {
-    Settings,
-    Folder,
-    Globe,
-    Save,
-    RefreshCw,
-    Lock,
-    Users,
-    Layers,
-    ExternalLink,
-    Maximize2,
-    Link2,
-    Camera,
-    Filter,
-    Palette,
-    Target,
-    Zap,
-    MousePointer2,
-    Move,
-    Trash2,
-    Copy,
-    Pencil,
-    X,
-} from 'lucide-react';
+import { Icon, getIconComponent } from '/react/components/common/Icon';
 
 import { Modal } from '@UI/react/components/modals/Modal';
 

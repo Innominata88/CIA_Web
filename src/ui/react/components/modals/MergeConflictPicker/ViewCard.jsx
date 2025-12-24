@@ -20,7 +20,7 @@
  */
 
 import React, { memo, forwardRef, useCallback } from 'react';
-import { Check, Image } from 'lucide-react';
+import { Icon, getIconComponent } from '/react/components/common/Icon';
 
 /**
  * @typedef {Object} ViewOption

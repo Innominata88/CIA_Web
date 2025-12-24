@@ -20,7 +20,7 @@
  */
 
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
-import { Merge, Archive, LayoutGrid, Check } from 'lucide-react';
+import { Icon, getIconComponent } from '/react/components/common/Icon';
 import { Modal } from '../Modal';
 import { Button } from '../../common/Button';
 import ViewCard from './ViewCard';

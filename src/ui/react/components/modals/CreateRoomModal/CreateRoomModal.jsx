@@ -20,19 +20,7 @@
  */
 
 import React, { useState, useCallback, useEffect } from "react";
-import {
-    MessageSquare,
-    Mic,
-    Layout,
-    Lock,
-    Unlock,
-    EyeOff,
-    Clock,
-    Save,
-    Users,
-    Check,
-    AlertCircle
-} from 'lucide-react';
+import { Icon, getIconComponent } from '/react/components/common/Icon';
 
 import { FormModal } from "@UI/react/components/modals/FormModal";
 import { FormField } from "@UI/react/components/modals/FormModal";

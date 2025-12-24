@@ -18,19 +18,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
-import {
-    Mic,
-    Camera,
-    Layout,
-    Video,
-    MessageSquare,
-    Wrench,
-    Glasses,
-    Phone,
-    HelpCircle,
-    Search,
-    ChevronDown,
-} from 'lucide-react';
+import { Icon, getIconComponent } from '/react/components/common/Icon';
 import { Modal } from '@UI/react/components/modals/Modal';
 import { voiceCommandService } from '@Services/voice/voiceCommandService.js';
 import './VoiceCommandHelp.scss';
