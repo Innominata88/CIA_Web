@@ -115,7 +115,7 @@ export function RecordingsTab({ workspaceId }) {
                 <CollapsibleHeaderSection
                     icon="radio"
                     title={isRecording ? "Recording Active" : "Recording"}
-                    color={isRecording ? "red" : "default"}
+                    color="red"
                     defaultExpanded={true}
                 >
                     {isRecording ? (
