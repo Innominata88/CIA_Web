@@ -9,7 +9,7 @@
 
 import React from 'react';
 import {
-    AdaptiveSection,
+    ResizableSection,
     AdaptiveSectionsContainer,
     useAdaptiveSectionStates,
     Icon,
@@ -94,7 +94,7 @@ export function SettingsTab({
                 onSectionToggle={toggleSection}
                 onSectionResize={resizeSection}
             >
-                <AdaptiveSection
+                <ResizableSection
                     id="preferences"
                     icon="user"
                     label="Your Preferences"
@@ -104,19 +104,19 @@ export function SettingsTab({
                         preferences={preferences}
                         onUpdate={updatePreferences}
                     />
-                </AdaptiveSection>
+                </ResizableSection>
 
-                <AdaptiveSection
+                <ResizableSection
                     id="project"
                     icon="building"
                     label="Project Info"
                     color="purple"
                 >
                     <ProjectInfo project={project} />
-                </AdaptiveSection>
+                </ResizableSection>
 
                 {isAdmin && (
-                    <AdaptiveSection
+                    <ResizableSection
                         id="admin"
                         icon="settings"
                         label="Admin Settings"
@@ -126,18 +126,18 @@ export function SettingsTab({
                             project={project}
                             roleConfig={roleConfig}
                         />
-                    </AdaptiveSection>
+                    </ResizableSection>
                 )}
 
                 {isOwner && (
-                    <AdaptiveSection
+                    <ResizableSection
                         id="danger"
                         icon="alertTriangle"
                         label="Danger Zone"
                         color="red"
                     >
                         <DangerZone project={project} />
-                    </AdaptiveSection>
+                    </ResizableSection>
                 )}
             </AdaptiveSectionsContainer>
         </div>

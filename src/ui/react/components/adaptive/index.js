@@ -41,7 +41,7 @@ export { StatusDot, InfoRow, StatBadge } from "./HeaderSection/components";
 
 // ResizableSections components
 export {
-    AdaptiveSection,
+    ResizableSection,
     AdaptiveSectionsContainer,
     useAdaptiveSectionStates,
 } from "./ResizableSections";

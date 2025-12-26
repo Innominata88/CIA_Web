@@ -2,7 +2,7 @@
  * AdaptiveResizableSections - VR-first adaptive resizable sections
  */
 export {
-    AdaptiveSection,
+    ResizableSection,
     AdaptiveSectionsContainer,
     useAdaptiveSectionStates,
 } from './AdaptiveResizableSections';

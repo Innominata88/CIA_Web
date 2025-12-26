@@ -89,7 +89,7 @@ function ResizeDivider({ onDragStart, isActive, isVR }) {
 // SINGLE SECTION
 // =============================================================================
 
-export function AdaptiveSection({
+export function ResizableSection({
     id,
     icon,
     label,
@@ -306,4 +306,4 @@ export function useAdaptiveSectionStates(initialStates) {
     };
 }
 
-export default AdaptiveSection;
+export default ResizableSection;
