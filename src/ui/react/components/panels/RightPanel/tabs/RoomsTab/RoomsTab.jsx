@@ -19,7 +19,6 @@
 import React from 'react';
 import {
     CollapsibleHeaderSection,
-    InfoRow,
     StatBadge,
     SectionHeader,
     Icon,
@@ -92,36 +91,45 @@ export function RoomsTab({ workspaceId }) {
                     color="purple"
                     defaultExpanded={true}
                 >
-                    <InfoRow
-                        icon="layers"
-                        label="Project"
-                        value={currentProject?.name || 'No Project'}
-                        color="var(--color-accent-purple)"
-                    />
-                    <InfoRow
-                        icon="doorOpen"
-                        label="Room"
-                        value={currentRoom?.name || 'Main Room'}
-                        color="var(--color-accent-purple)"
-                    />
-                    <InfoRow
-                        icon="grid3x3"
-                        label="Workspace"
-                        value={currentWorkspace?.name || 'Default'}
-                        subtle
-                    />
+                    {/* Project name - centered subheader */}
+                    <div className="location-status__project">
+                        <Icon name="layers" size={14} />
+                        <span className="location-status__project-name">
+                            {currentProject?.name || 'No Project'}
+                        </span>
+                    </div>
+
+                    {/* Room and Workspace details */}
+                    <div className="location-status__details">
+                        <div className="location-status__detail">
+                            <Icon name="doorOpen" size={12} />
+                            <span className="location-status__label">Room</span>
+                            <span className="location-status__value">
+                                {currentRoom?.name || 'Main Room'}
+                            </span>
+                        </div>
+                        <div className="location-status__detail location-status__detail--subtle">
+                            <Icon name="grid3x3" size={12} />
+                            <span className="location-status__label">Workspace</span>
+                            <span className="location-status__value">
+                                {currentWorkspace?.name || 'Default'}
+                            </span>
+                        </div>
+                    </div>
 
                     {/* Stats row with divider */}
                     <div className="location-status__stats">
                         <StatBadge icon="users">{onlineCount} online</StatBadge>
-                        <StatBadge icon="mic" color="var(--color-accent-green)">
-                            {voiceCount} in voice
-                        </StatBadge>
-                        {vrCount > 0 && (
-                            <StatBadge icon="eye" color="var(--color-accent-purple)">
-                                {vrCount} in VR
+                        <div className="location-status__stats-right">
+                            <StatBadge icon="mic" color="var(--color-accent-green)">
+                                {voiceCount} in voice
                             </StatBadge>
-                        )}
+                            {vrCount > 0 && (
+                                <StatBadge icon="eye" color="var(--color-accent-purple)">
+                                    {vrCount} in VR
+                                </StatBadge>
+                            )}
+                        </div>
                     </div>
                 </CollapsibleHeaderSection>
             </div>
