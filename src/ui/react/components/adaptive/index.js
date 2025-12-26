@@ -38,3 +38,10 @@ export { CollapsibleHeaderSection } from "./HeaderSection/components/Collapsible
 export { DismissibleCard } from "./HeaderSection/components/DismissableCard/DismissibleCard";
 export { SectionHeader } from "./HeaderSection/components/SectionHeader/SectionHeader";
 export { StatusDot, InfoRow, StatBadge } from "./HeaderSection/components";
+
+// ResizableSections components
+export {
+    AdaptiveSection,
+    AdaptiveSectionsContainer,
+    useAdaptiveSectionStates,
+} from "./ResizableSections";

@@ -9,16 +9,16 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow-y: auto;
+  overflow: hidden;
 
   &--loading {
     align-items: center;
     justify-content: center;
-    overflow: hidden;
   }
 
-  &__section-wrapper {
-    padding: $spacing-sm;
+  &__sections {
+    flex: 1;
+    overflow-y: auto;
   }
 
   // Section styles

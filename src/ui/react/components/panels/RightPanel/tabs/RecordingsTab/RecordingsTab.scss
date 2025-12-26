@@ -132,8 +132,235 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: $spacing-xs;
-  padding: 0 $spacing-sm $spacing-sm;
+  gap: $spacing-sm;
+  padding: $spacing-sm;
+}
+
+// =============================================================================
+// RECORDING CARD
+// =============================================================================
+
+.recording-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid $color-border-default;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+  overflow: hidden;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &--selected {
+    background: rgba($color-accent-red, 0.08);
+    border-color: rgba($color-accent-red, 0.3);
+  }
+
+  &__main {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-sm $spacing-md;
+  }
+
+  &__thumbnail {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($color-accent-red, 0.15);
+    border-radius: $radius-sm;
+    color: $color-accent-red;
+    flex-shrink: 0;
+  }
+
+  &__live-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__live-dot {
+    color: $color-accent-red;
+    animation: pulse 1s infinite;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-medium;
+    color: $color-text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    margin-top: 2px;
+    font-size: 10px;
+    color: $color-text-muted;
+  }
+
+  &__duration,
+  &__mode {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  &__exported {
+    color: $color-accent-green;
+  }
+
+  &__date {
+    font-size: 10px;
+    color: $color-text-tertiary;
+    margin-top: 2px;
+  }
+
+  &__expanded {
+    padding: $spacing-sm $spacing-md $spacing-md;
+    border-top: 1px solid $color-border-default;
+    background: rgba(0, 0, 0, 0.1);
+  }
+
+  &__details {
+    display: flex;
+    gap: $spacing-md;
+    font-size: 10px;
+    color: $color-text-muted;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__playback {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    margin-bottom: $spacing-sm;
+    padding: $spacing-sm;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: $radius-sm;
+  }
+
+  &__playback-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid $color-border-default;
+    border-radius: $radius-sm;
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.1);
+      color: $color-text-secondary;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &--play {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba($color-accent-red, 0.15);
+      border-color: rgba($color-accent-red, 0.3);
+      color: $color-accent-red;
+    }
+  }
+
+  &__progress {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    margin: 0 $spacing-xs;
+  }
+
+  &__progress-bar {
+    width: 0%;
+    height: 100%;
+    background: $color-accent-red;
+    border-radius: 2px;
+  }
+
+  &__progress-time {
+    font-size: 9px;
+    color: $color-text-muted;
+    font-family: "SF Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  &__action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-sm;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid $color-border-default;
+    color: $color-text-secondary;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &[data-color="green"] {
+      &:hover:not(:disabled) {
+        background: rgba($color-accent-green, 0.15);
+        border-color: rgba($color-accent-green, 0.3);
+        color: $color-accent-green;
+      }
+    }
+
+    &[data-color="blue"] {
+      &:hover:not(:disabled) {
+        background: rgba($color-accent-blue, 0.15);
+        border-color: rgba($color-accent-blue, 0.3);
+        color: $color-accent-blue;
+      }
+    }
+
+    &:last-child:not(:first-child) {
+      flex: 0 0 auto;
+
+      &:hover:not(:disabled) {
+        background: rgba($color-accent-red, 0.15);
+        border-color: rgba($color-accent-red, 0.3);
+        color: $color-accent-red;
+      }
+    }
+  }
 }
 
 // =============================================================================

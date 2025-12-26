@@ -9,8 +9,9 @@
 
 import React from 'react';
 import {
-    CollapsibleHeaderSection,
-    SectionHeader,
+    AdaptiveSection,
+    AdaptiveSectionsContainer,
+    useAdaptiveSectionStates,
     Icon,
 } from '@UI/react/components/adaptive';
 import { useSettingsTab } from './hooks/useSettingsTab';
@@ -69,6 +70,14 @@ export function SettingsTab({
     updatePreferences,
     loading,
 }) {
+    // Section states for adaptive resizable sections
+    const { states: sectionStates, toggleSection, resizeSection } = useAdaptiveSectionStates({
+        preferences: { expanded: true, flexGrow: 2 },
+        project: { expanded: true, flexGrow: 1 },
+        admin: { expanded: true, flexGrow: 1 },
+        danger: { expanded: false, flexGrow: 1 },
+    });
+
     if (loading) {
         return (
             <div className="settings-tab settings-tab--loading">
@@ -79,63 +88,58 @@ export function SettingsTab({
 
     return (
         <div className="settings-tab">
-            {/* Your Preferences Section */}
-            <div className="settings-tab__section-wrapper">
-                <CollapsibleHeaderSection
+            <AdaptiveSectionsContainer
+                className="settings-tab__sections"
+                sectionStates={sectionStates}
+                onSectionToggle={toggleSection}
+                onSectionResize={resizeSection}
+            >
+                <AdaptiveSection
+                    id="preferences"
                     icon="user"
-                    title="Your Preferences"
+                    label="Your Preferences"
                     color="blue"
-                    defaultExpanded={true}
                 >
                     <YourPreferences
                         preferences={preferences}
                         onUpdate={updatePreferences}
                     />
-                </CollapsibleHeaderSection>
-            </div>
+                </AdaptiveSection>
 
-            {/* Project Info Section */}
-            <div className="settings-tab__section-wrapper">
-                <CollapsibleHeaderSection
+                <AdaptiveSection
+                    id="project"
                     icon="building"
-                    title="Project Info"
+                    label="Project Info"
                     color="purple"
-                    defaultExpanded={true}
                 >
                     <ProjectInfo project={project} />
-                </CollapsibleHeaderSection>
-            </div>
+                </AdaptiveSection>
 
-            {/* Admin Settings Section */}
-            {isAdmin && (
-                <div className="settings-tab__section-wrapper">
-                    <CollapsibleHeaderSection
+                {isAdmin && (
+                    <AdaptiveSection
+                        id="admin"
                         icon="settings"
-                        title="Admin Settings"
+                        label="Admin Settings"
                         color="amber"
-                        defaultExpanded={true}
                     >
                         <AdminSettings
                             project={project}
                             roleConfig={roleConfig}
                         />
-                    </CollapsibleHeaderSection>
-                </div>
-            )}
+                    </AdaptiveSection>
+                )}
 
-            {/* Danger Zone Section */}
-            {isOwner && (
-                <div className="settings-tab__section-wrapper">
-                    <CollapsibleHeaderSection
+                {isOwner && (
+                    <AdaptiveSection
+                        id="danger"
                         icon="alertTriangle"
-                        title="Danger Zone"
+                        label="Danger Zone"
                         color="red"
-                        defaultExpanded={false}
                     >
                         <DangerZone project={project} />
-                    </CollapsibleHeaderSection>
-                </div>
-            )}
+                    </AdaptiveSection>
+                )}
+            </AdaptiveSectionsContainer>
         </div>
     );
 }
