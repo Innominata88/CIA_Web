@@ -2,9 +2,6 @@
  * @file RoomsTab.scss
  * @description Styles for RoomsTab component.
  * Uses BEM naming convention.
- *
- * Note: Some component styles are in RightPanel.scss
- * for shared styling across the panel.
  */
 
 @use "theme" as *;
@@ -18,6 +15,31 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+
+  &__header {
+    flex-shrink: 0;
+    padding: $spacing-sm;
+  }
+
+  &__list {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+}
+
+// =============================================================================
+// LOCATION STATUS (inside CollapsibleHeaderSection)
+// =============================================================================
+
+.location-status__stats {
+  display: flex;
+  gap: $spacing-lg;
+  margin-top: $spacing-sm;
+  padding-top: $spacing-sm;
+  border-top: 1px solid rgba($color-accent-purple, 0.15);
 }
 
 // =============================================================================
@@ -25,6 +47,8 @@
 // =============================================================================
 
 .rooms-list {
+  flex: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: $spacing-sm;

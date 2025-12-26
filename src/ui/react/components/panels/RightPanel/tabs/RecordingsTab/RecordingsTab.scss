@@ -2,23 +2,154 @@
  * @file RecordingsTab.scss
  * @description Styles for RecordingsTab component.
  * Uses BEM naming convention.
- *
- * Note: Some component styles are in RightPanel.scss
- * for shared styling across the panel.
  */
 
 @use "theme" as *;
 
 // =============================================================================
-// RECORDINGS TAB CONTAINER
+// RECORDINGS PANEL CONTAINER
 // =============================================================================
 
-.recordings-tab {
+.recordings-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
   overflow: hidden;
 
+  &__header {
+    flex-shrink: 0;
+    padding: $spacing-sm;
+  }
+
+  &__list {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    padding: $spacing-sm;
+    margin: $spacing-xs $spacing-sm;
+    background: rgba($color-accent-red, 0.1);
+    border: 1px solid rgba($color-accent-red, 0.3);
+    border-radius: $radius-sm;
+    color: $color-accent-red;
+    font-size: $font-size-xs;
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-sm $spacing-md;
+    border-top: 1px solid $color-border-subtle;
+    background: rgba(0, 0, 0, 0.1);
+    font-size: $font-size-xs;
+    color: $color-text-muted;
+  }
+
+  &__storage {
+    color: $color-text-secondary;
+  }
+
+  &__refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: $spacing-xs;
+    background: none;
+    border: none;
+    color: $color-text-muted;
+    font-size: $font-size-xs;
+    cursor: pointer;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: $radius-sm;
+    transition: all $transition-fast;
+
+    &:hover {
+      color: $color-text-secondary;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+// =============================================================================
+// RECORDING STATUS (inside CollapsibleHeaderSection)
+// =============================================================================
+
+.recording-status {
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__name {
+    font-size: 14px;
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+
+  &__paused {
+    font-size: 11px;
+    color: $color-accent-amber;
+    padding: 2px 6px;
+    background: rgba($color-accent-amber, 0.15);
+    border-radius: $radius-sm;
+  }
+
+  &__stats {
+    display: flex;
+    gap: $spacing-lg;
+    margin-top: $spacing-sm;
+  }
+
+  &__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: $spacing-sm;
+    margin-top: $spacing-sm;
+    border-top: 1px solid rgba($color-accent-red, 0.15);
+  }
+
+  &__controls-left {
+    display: flex;
+    gap: $spacing-sm;
+  }
+}
+
+// =============================================================================
+// RECORDINGS LIST
+// =============================================================================
+
+.recordings-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  padding: 0 $spacing-sm $spacing-sm;
+}
+
+// =============================================================================
+// MONOSPACE HELPER
+// =============================================================================
+
+.monospace {
+  font-family: "SF Mono", "Monaco", "Menlo", "Consolas", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+// =============================================================================
+// LEGACY STYLES (for backwards compatibility with search component)
+// =============================================================================
+
+.recordings-tab {
   &__search {
     display: flex;
     align-items: center;
@@ -73,62 +204,5 @@
     svg {
       opacity: 0.4;
     }
-  }
-
-  &__list {
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-xs;
-    padding: 0 $spacing-sm $spacing-sm;
-  }
-
-  &__error {
-    display: flex;
-    align-items: center;
-    gap: $spacing-xs;
-    padding: $spacing-sm;
-    margin: $spacing-xs $spacing-sm;
-    background: rgba($color-accent-red, 0.1);
-    border: 1px solid rgba($color-accent-red, 0.3);
-    border-radius: $radius-sm;
-    color: $color-accent-red;
-    font-size: $font-size-xs;
-  }
-}
-
-// =============================================================================
-// LIVE BADGE
-// =============================================================================
-
-.panel-header__live-badge {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px $spacing-xs;
-  background: rgba($color-accent-red, 0.2);
-  border: 1px solid rgba($color-accent-red, 0.4);
-  border-radius: $radius-sm;
-  color: $color-accent-red;
-  font-size: 9px;
-  font-weight: $font-weight-bold;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.panel-header__live-dot {
-  width: 6px;
-  height: 6px;
-  background: $color-accent-red;
-  border-radius: 50%;
-  animation: pulse-red 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse-red {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
   }
 }

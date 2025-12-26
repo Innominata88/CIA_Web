@@ -5,4 +5,5 @@
  */
 export { CollapsibleHeaderSection } from "./components/CollapsibleHeaderSection/CollapsibleHeaderSection";
 export { DismissibleCard } from "./components/DismissableCard/DismissibleCard";
+export { SectionHeader } from "./components/SectionHeader/SectionHeader";
 export { StatusDot, InfoRow, StatBadge } from "./components";

@@ -18,17 +18,37 @@
  */
 
 import React from 'react';
-import { Icon } from '@UI/react/components/common/Icon';
 import {
-    ResizableSectionsContainer,
-    ResizableSection,
-} from '@UI/react/components/common/ResizableSections';
+    CollapsibleHeaderSection,
+    StatusDot,
+    StatBadge,
+    SectionHeader,
+    AdaptiveButton,
+    Icon,
+} from '@UI/react/components/adaptive';
 
 import { useRecordingsTab } from './hooks/useRecordingsTab';
-import { RecordingControls } from './components/RecordingControls';
 import { RecordingCard } from './components/RecordingCard';
 
 import './RecordingsTab.scss';
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
+/**
+ * Format duration in seconds to HH:MM:SS or MM:SS
+ */
+function formatDuration(seconds) {
+    if (!seconds || seconds < 0) return '00:00';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    if (h > 0) {
+        return `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+}
 
 // =============================================================================
 // MAIN COMPONENT
@@ -66,8 +86,6 @@ export function RecordingsTab({ workspaceId }) {
         exportingId,
         loading,
         error,
-        sectionStates,
-        toggleSection,
         totalSize,
         handleStartRecording,
         handleStopRecording,
@@ -79,130 +97,169 @@ export function RecordingsTab({ workspaceId }) {
         refresh,
     } = useRecordingsTab();
 
-    return (
-        <div className="recordings-tab">
-            {/* Header */}
-            <div className="panel-header">
-                <Icon name="video" size={14} className="panel-header__icon file-icon--red" />
-                <span className="panel-header__title">Recording</span>
-                {isRecording && (
-                    <div className="panel-header__live-badge">
-                        <span className="panel-header__live-dot" />
-                        LIVE
-                    </div>
-                )}
-            </div>
+    // Count markers (placeholder - would come from real data)
+    const markerCount = 0;
 
+    return (
+        <div className="recordings-panel">
             {/* Error display */}
             {error && (
-                <div className="recordings-tab__error">
+                <div className="recordings-panel__error">
                     <Icon name="alertCircle" size={14} />
                     <span>{error}</span>
                 </div>
             )}
 
-            {/* Resizable Sections */}
-            <ResizableSectionsContainer
-                sectionStates={sectionStates}
-                onSectionToggle={toggleSection}
-            >
-                {/* Recording Controls */}
-                <ResizableSection
-                    id="controls"
-                    icon={isRecording ? 'circle' : 'video'}
-                    iconColorClass="icon-red"
-                    label={isRecording ? 'Current Recording' : 'New Recording'}
+            {/* Recording Status/Controls Header */}
+            <div className="recordings-panel__header">
+                <CollapsibleHeaderSection
+                    icon="radio"
+                    title={isRecording ? "Recording Active" : "Recording"}
+                    color={isRecording ? "red" : "default"}
+                    defaultExpanded={true}
                 >
-                    <RecordingControls
-                        isRecording={isRecording}
-                        recordingDuration={recordingDuration}
-                        recordingMode={recordingMode}
-                        includeAudio={includeAudio}
-                        onModeChange={setRecordingMode}
-                        onAudioToggle={() => setIncludeAudio(!includeAudio)}
-                        onStart={handleStartRecording}
-                        onStop={handleStopRecording}
-                        recordingName={recordingName}
-                        onNameChange={setRecordingName}
-                        isPaused={isPaused}
-                        onPause={handlePauseRecording}
-                        onResume={handleResumeRecording}
-                    />
-                </ResizableSection>
+                    {isRecording ? (
+                        <>
+                            {/* Row 1: Recording name + status */}
+                            <div className="recording-status__info">
+                                <StatusDot
+                                    color="var(--color-accent-red)"
+                                    pulse={!isPaused}
+                                />
+                                <span className="recording-status__name">
+                                    {recordingName || 'Session Recording'}
+                                </span>
+                                {isPaused && (
+                                    <span className="recording-status__paused">
+                                        Paused
+                                    </span>
+                                )}
+                            </div>
 
-                {/* Past Recordings */}
-                <ResizableSection
-                    id="recordings"
-                    icon="calendar"
-                    iconColorClass="icon-purple"
-                    label="Past Recordings"
+                            {/* Row 2: Stats */}
+                            <div className="recording-status__stats">
+                                <StatBadge icon="clock">
+                                    <span className="monospace">
+                                        {formatDuration(recordingDuration)}
+                                    </span>
+                                </StatBadge>
+                                <StatBadge icon="circle">
+                                    {markerCount} markers
+                                </StatBadge>
+                            </div>
+
+                            {/* Row 3: Controls */}
+                            <div className="recording-status__controls">
+                                <div className="recording-status__controls-left">
+                                    <AdaptiveButton
+                                        icon={isPaused ? 'play' : 'pause'}
+                                        variant="secondary"
+                                        onClick={isPaused ? handleResumeRecording : handlePauseRecording}
+                                        title={isPaused ? 'Resume' : 'Pause'}
+                                    />
+                                    <AdaptiveButton
+                                        icon="circle"
+                                        variant="secondary"
+                                        onClick={() => { /* handleAddMarker */ }}
+                                        title="Add Marker"
+                                    />
+                                </div>
+                                <AdaptiveButton
+                                    icon="x"
+                                    variant="danger"
+                                    onClick={handleStopRecording}
+                                >
+                                    Stop
+                                </AdaptiveButton>
+                            </div>
+                        </>
+                    ) : (
+                        <AdaptiveButton
+                            icon="radio"
+                            variant="danger"
+                            fullWidth
+                            onClick={handleStartRecording}
+                        >
+                            Start Recording
+                        </AdaptiveButton>
+                    )}
+                </CollapsibleHeaderSection>
+            </div>
+
+            {/* Past Recordings List */}
+            <div className="recordings-panel__list">
+                <SectionHeader
+                    icon="video"
+                    color="var(--color-accent-red)"
                     count={recordings.length}
                 >
-                    {/* Search */}
-                    <div className="recordings-tab__search">
-                        <Icon name="search" size={14} className="recordings-tab__search-icon" />
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search recordings..."
-                            className="recordings-tab__search-input"
+                    Past Recordings
+                </SectionHeader>
+
+                {/* Search */}
+                <div className="recordings-tab__search">
+                    <Icon name="search" size={14} className="recordings-tab__search-icon" />
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search recordings..."
+                        className="recordings-tab__search-input"
+                    />
+                    {searchQuery && (
+                        <button
+                            className="recordings-tab__search-clear"
+                            onClick={() => setSearchQuery('')}
+                        >
+                            <Icon name="close" size={10} />
+                        </button>
+                    )}
+                </div>
+
+                {/* Loading state */}
+                {loading && (
+                    <div className="recordings-tab__loading">
+                        <Icon name="loader" size={20} className="spin" />
+                        <span>Loading recordings...</span>
+                    </div>
+                )}
+
+                {/* Empty state */}
+                {!loading && filteredRecordings.length === 0 && (
+                    <div className="recordings-tab__empty">
+                        <Icon name="video" size={32} />
+                        <span>
+                            {searchQuery
+                                ? 'No recordings match your search'
+                                : 'No recordings yet. Start one above!'}
+                        </span>
+                    </div>
+                )}
+
+                {/* Recordings list */}
+                <div className="recordings-list">
+                    {filteredRecordings.map(recording => (
+                        <RecordingCard
+                            key={recording.id}
+                            recording={recording}
+                            isSelected={selectedRecording === recording.id}
+                            onSelect={setSelectedRecording}
+                            onExport={handleExport}
+                            onDownload={handleDownload}
+                            onDelete={handleDelete}
+                            isExporting={exportingId === recording.id}
                         />
-                        {searchQuery && (
-                            <button
-                                className="recordings-tab__search-clear"
-                                onClick={() => setSearchQuery('')}
-                            >
-                                <Icon name="close" size={10} />
-                            </button>
-                        )}
-                    </div>
-
-                    {/* Loading state */}
-                    {loading && (
-                        <div className="recordings-tab__loading">
-                            <Icon name="loader" size={20} className="spin" />
-                            <span>Loading recordings...</span>
-                        </div>
-                    )}
-
-                    {/* Empty state */}
-                    {!loading && filteredRecordings.length === 0 && (
-                        <div className="recordings-tab__empty">
-                            <Icon name="video" size={32} />
-                            <span>
-                                {searchQuery
-                                    ? 'No recordings match your search'
-                                    : 'No recordings yet. Start one above!'}
-                            </span>
-                        </div>
-                    )}
-
-                    {/* Recordings list */}
-                    <div className="recordings-tab__list">
-                        {filteredRecordings.map(recording => (
-                            <RecordingCard
-                                key={recording.id}
-                                recording={recording}
-                                isSelected={selectedRecording === recording.id}
-                                onSelect={setSelectedRecording}
-                                onExport={handleExport}
-                                onDownload={handleDownload}
-                                onDelete={handleDelete}
-                                isExporting={exportingId === recording.id}
-                            />
-                        ))}
-                    </div>
-                </ResizableSection>
-            </ResizableSectionsContainer>
+                    ))}
+                </div>
+            </div>
 
             {/* Footer */}
-            <div className="panel-footer panel-footer--with-info">
-                <span className="panel-footer__storage">
+            <div className="recordings-panel__footer">
+                <span className="recordings-panel__storage">
                     Storage: {totalSize}
                 </span>
-                <button className="panel-footer__settings-btn" onClick={refresh}>
-                    <Icon name="settings" size={10} />
+                <button className="recordings-panel__refresh-btn" onClick={refresh}>
+                    <Icon name="refreshCw" size={10} />
                     Refresh
                 </button>
             </div>

@@ -2,9 +2,6 @@
  * @file VoiceTab.scss
  * @description Styles for VoiceTab component.
  * Uses BEM naming convention.
- *
- * Note: Some component styles are in RightPanel.scss
- * for shared styling across the panel.
  */
 
 @use "theme" as *;
@@ -19,6 +16,19 @@
   height: 100%;
   overflow: hidden;
 
+  &__header {
+    flex-shrink: 0;
+    padding: $spacing-sm;
+  }
+
+  &__list {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
   &__empty {
     display: flex;
     align-items: center;
@@ -31,14 +41,46 @@
 }
 
 // =============================================================================
-// VOICE SECTION
+// VOICE STATUS (inside CollapsibleHeaderSection)
 // =============================================================================
 
-.voice-section {
-  padding: $spacing-sm;
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-md;
+.voice-status {
+  &__room {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__room-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: $color-text-primary;
+  }
+
+  &__state {
+    font-size: 12px;
+    color: $color-accent-green;
+  }
+
+  &__stats {
+    display: flex;
+    gap: $spacing-lg;
+    margin-top: $spacing-sm;
+  }
+
+  &__controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: $spacing-sm;
+    margin-top: $spacing-sm;
+    border-top: 1px solid rgba($color-accent-green, 0.15);
+  }
+
+  &__controls-left {
+    display: flex;
+    gap: $spacing-sm;
+  }
 }
 
 // =============================================================================
@@ -46,6 +88,8 @@
 // =============================================================================
 
 .participants-list {
+  flex: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: $spacing-xs;
