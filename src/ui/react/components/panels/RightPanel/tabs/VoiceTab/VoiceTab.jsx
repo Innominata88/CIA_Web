@@ -117,7 +117,7 @@ export function VoiceTab({ workspaceId, channels: propChannels }) {
                 <CollapsibleHeaderSection
                     icon="wifi"
                     title="Voice Status"
-                    color="green"
+                    color={isConnected ? "green" : "default"}
                     defaultExpanded={true}
                 >
                     {/* Row 1: Room + Connection Status */}
