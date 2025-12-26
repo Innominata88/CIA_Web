@@ -146,15 +146,23 @@
 }
 
 // =============================================================================
-// LEGACY STYLES (for backwards compatibility with search component)
+// TOOLBAR AND SEARCH
 // =============================================================================
 
 .recordings-tab {
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-xs $spacing-sm;
+    margin: $spacing-xs $spacing-sm 0;
+  }
+
   &__search {
+    flex: 1;
     display: flex;
     align-items: center;
     padding: $spacing-xs $spacing-sm;
-    margin: $spacing-xs $spacing-sm;
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid $color-border-subtle;
     border-radius: $radius-sm;
@@ -187,6 +195,51 @@
       &:hover {
         color: $color-text-secondary;
       }
+    }
+  }
+
+  &__controls {
+    display: flex;
+    gap: $spacing-xs;
+  }
+
+  &__dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    &-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid $color-border-subtle;
+      border-radius: $radius-sm;
+      color: $color-text-muted;
+      cursor: pointer;
+      transition: all $transition-fast;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.3);
+        color: $color-text-secondary;
+      }
+
+      &--active {
+        background: rgba($color-accent-red, 0.15);
+        border-color: rgba($color-accent-red, 0.3);
+        color: $color-accent-red;
+      }
+    }
+
+    &-select {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
     }
   }
 

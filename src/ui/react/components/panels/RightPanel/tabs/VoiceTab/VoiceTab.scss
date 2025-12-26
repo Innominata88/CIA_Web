@@ -48,13 +48,29 @@
   &__room {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: $spacing-sm;
+    padding-bottom: $spacing-sm;
+    margin-bottom: $spacing-sm;
+    border-bottom: 1px solid rgba($color-accent-green, 0.15);
+
+    svg {
+      color: $color-accent-green;
+    }
   }
 
   &__room-name {
-    font-size: 14px;
-    font-weight: 500;
-    color: $color-text-primary;
+    font-size: 12px;
+    font-weight: $font-weight-medium;
+    color: $color-text-secondary;
+  }
+
+  &__connection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    margin-bottom: $spacing-sm;
   }
 
   &__state {
@@ -64,8 +80,17 @@
 
   &__stats {
     display: flex;
+    justify-content: center;
     gap: $spacing-lg;
+    margin-bottom: $spacing-sm;
+  }
+
+  &__join {
+    display: flex;
+    justify-content: center;
+    padding-top: $spacing-sm;
     margin-top: $spacing-sm;
+    border-top: 1px solid rgba($color-accent-green, 0.15);
   }
 
   &__controls {

@@ -120,19 +120,21 @@ export function VoiceTab({ workspaceId, channels: propChannels }) {
                     color={isConnected ? "green" : "default"}
                     defaultExpanded={true}
                 >
-                    {/* Row 1: Room + Connection Status */}
+                    {/* Row 1: Room name centered as subheading */}
                     <div className="voice-status__room">
                         <Icon name="doorOpen" size={14} />
                         <span className="voice-status__room-name">
                             {currentChannelObj?.name || 'Not Connected'}
                         </span>
-                        {isConnected && (
-                            <>
-                                <StatusDot color="var(--color-accent-green)" pulse />
-                                <span className="voice-status__state">Connected</span>
-                            </>
-                        )}
                     </div>
+
+                    {/* Row 2: Connection status */}
+                    {isConnected && (
+                        <div className="voice-status__connection">
+                            <StatusDot color="var(--color-accent-green)" pulse />
+                            <span className="voice-status__state">Connected</span>
+                        </div>
+                    )}
 
                     {/* Row 2: Stats */}
                     {isConnected && (
@@ -146,49 +148,47 @@ export function VoiceTab({ workspaceId, channels: propChannels }) {
                         </div>
                     )}
 
-                    {/* Row 3: Controls */}
-                    <div className="voice-status__controls">
-                        <div className="voice-status__controls-left">
-                            {isConnected ? (
-                                <>
-                                    <AdaptiveButton
-                                        icon={muted ? 'micOff' : 'mic'}
-                                        variant={muted ? 'danger' : 'primary'}
-                                        onClick={handleToggleMute}
-                                        title={muted ? 'Unmute (M)' : 'Mute (M)'}
-                                    />
-                                    <AdaptiveButton
-                                        icon="headphones"
-                                        variant={deafened ? 'danger' : 'secondary'}
-                                        onClick={handleToggleDeafen}
-                                        title={deafened ? 'Undeafen (D)' : 'Deafen (D)'}
-                                    />
-                                    <AdaptiveButton
-                                        icon="settings"
-                                        variant="ghost"
-                                        onClick={() => { }}
-                                        title="Voice Settings"
-                                    />
-                                </>
-                            ) : (
+                    {/* Controls */}
+                    {isConnected ? (
+                        <div className="voice-status__controls">
+                            <div className="voice-status__controls-left">
                                 <AdaptiveButton
-                                    icon="phone"
-                                    variant="primary"
-                                    onClick={handleJoin}
-                                >
-                                    Join Voice
-                                </AdaptiveButton>
-                            )}
-                        </div>
-                        {isConnected && (
+                                    icon={muted ? 'micOff' : 'mic'}
+                                    variant={muted ? 'danger' : 'primary'}
+                                    onClick={handleToggleMute}
+                                    title={muted ? 'Unmute (M)' : 'Mute (M)'}
+                                />
+                                <AdaptiveButton
+                                    icon="headphones"
+                                    variant={deafened ? 'danger' : 'secondary'}
+                                    onClick={handleToggleDeafen}
+                                    title={deafened ? 'Undeafen (D)' : 'Deafen (D)'}
+                                />
+                                <AdaptiveButton
+                                    icon="settings"
+                                    variant="ghost"
+                                    onClick={() => { }}
+                                    title="Voice Settings"
+                                />
+                            </div>
                             <AdaptiveButton
                                 icon="phoneOff"
                                 variant="danger"
                                 onClick={handleLeave}
                                 title="Leave Voice"
                             />
-                        )}
-                    </div>
+                        </div>
+                    ) : (
+                        <div className="voice-status__join">
+                            <AdaptiveButton
+                                icon="phone"
+                                variant="primary"
+                                onClick={handleJoin}
+                            >
+                                Join Voice
+                            </AdaptiveButton>
+                        </div>
+                    )}
                 </CollapsibleHeaderSection>
             </div>
 

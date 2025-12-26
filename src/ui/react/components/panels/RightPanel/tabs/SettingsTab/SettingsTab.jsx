@@ -8,12 +8,11 @@
  */
 
 import React from 'react';
-import { Icon } from '@UI/react/components/common/Icon';
 import {
-    ResizableSectionsContainer,
-    ResizableSection,
-    useSectionStates,
-} from '@UI/react/components/common/ResizableSections';
+    CollapsibleHeaderSection,
+    SectionHeader,
+    Icon,
+} from '@UI/react/components/adaptive';
 import { useSettingsTab } from './hooks/useSettingsTab';
 import { YourPreferences } from './sections/YourPreferences';
 import { ProjectInfo } from './sections/ProjectInfo';
@@ -70,14 +69,6 @@ export function SettingsTab({
     updatePreferences,
     loading,
 }) {
-    // Section states for resizable sections
-    const { states: sectionStates, toggleSection } = useSectionStates({
-        preferences: { expanded: true, flexGrow: 2 },
-        project: { expanded: true, flexGrow: 1 },
-        admin: { expanded: true, flexGrow: 1 },
-        danger: { expanded: false, flexGrow: 1 },
-    });
-
     if (loading) {
         return (
             <div className="settings-tab settings-tab--loading">
@@ -88,57 +79,63 @@ export function SettingsTab({
 
     return (
         <div className="settings-tab">
-            <ResizableSectionsContainer
-                className="settings-tab__sections"
-                sectionStates={sectionStates}
-                onSectionToggle={toggleSection}
-            >
-                <ResizableSection
-                    id="preferences"
+            {/* Your Preferences Section */}
+            <div className="settings-tab__section-wrapper">
+                <CollapsibleHeaderSection
                     icon="user"
-                    iconColorClass="icon-blue"
-                    label="Your Preferences"
+                    title="Your Preferences"
+                    color="blue"
+                    defaultExpanded={true}
                 >
                     <YourPreferences
                         preferences={preferences}
                         onUpdate={updatePreferences}
                     />
-                </ResizableSection>
+                </CollapsibleHeaderSection>
+            </div>
 
-                <ResizableSection
-                    id="project"
+            {/* Project Info Section */}
+            <div className="settings-tab__section-wrapper">
+                <CollapsibleHeaderSection
                     icon="building"
-                    iconColorClass="icon-purple"
-                    label="Project Info"
+                    title="Project Info"
+                    color="purple"
+                    defaultExpanded={true}
                 >
                     <ProjectInfo project={project} />
-                </ResizableSection>
+                </CollapsibleHeaderSection>
+            </div>
 
-                {isAdmin && (
-                    <ResizableSection
-                        id="admin"
+            {/* Admin Settings Section */}
+            {isAdmin && (
+                <div className="settings-tab__section-wrapper">
+                    <CollapsibleHeaderSection
                         icon="settings"
-                        iconColorClass="icon-amber"
-                        label="Admin Settings"
+                        title="Admin Settings"
+                        color="amber"
+                        defaultExpanded={true}
                     >
                         <AdminSettings
                             project={project}
                             roleConfig={roleConfig}
                         />
-                    </ResizableSection>
-                )}
+                    </CollapsibleHeaderSection>
+                </div>
+            )}
 
-                {isOwner && (
-                    <ResizableSection
-                        id="danger"
+            {/* Danger Zone Section */}
+            {isOwner && (
+                <div className="settings-tab__section-wrapper">
+                    <CollapsibleHeaderSection
                         icon="alertTriangle"
-                        iconColorClass="icon-red"
-                        label="Danger Zone"
+                        title="Danger Zone"
+                        color="red"
+                        defaultExpanded={false}
                     >
                         <DangerZone project={project} />
-                    </ResizableSection>
-                )}
-            </ResizableSectionsContainer>
+                    </CollapsibleHeaderSection>
+                </div>
+            )}
         </div>
     );
 }

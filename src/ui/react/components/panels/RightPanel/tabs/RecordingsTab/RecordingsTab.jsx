@@ -81,6 +81,12 @@ export function RecordingsTab({ workspaceId }) {
         setIncludeAudio,
         searchQuery,
         setSearchQuery,
+        sortBy,
+        setSortBy,
+        sortOrder,
+        toggleSortOrder,
+        filterBy,
+        setFilterBy,
         selectedRecording,
         setSelectedRecording,
         exportingId,
@@ -196,24 +202,66 @@ export function RecordingsTab({ workspaceId }) {
                     Past Recordings
                 </SectionHeader>
 
-                {/* Search */}
-                <div className="recordings-tab__search">
-                    <Icon name="search" size={14} className="recordings-tab__search-icon" />
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search recordings..."
-                        className="recordings-tab__search-input"
-                    />
-                    {searchQuery && (
-                        <button
-                            className="recordings-tab__search-clear"
-                            onClick={() => setSearchQuery('')}
-                        >
-                            <Icon name="close" size={10} />
-                        </button>
-                    )}
+                {/* Search and Controls Row */}
+                <div className="recordings-tab__toolbar">
+                    <div className="recordings-tab__search">
+                        <Icon name="search" size={14} className="recordings-tab__search-icon" />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search recordings..."
+                            className="recordings-tab__search-input"
+                        />
+                        {searchQuery && (
+                            <button
+                                className="recordings-tab__search-clear"
+                                onClick={() => setSearchQuery('')}
+                            >
+                                <Icon name="close" size={10} />
+                            </button>
+                        )}
+                    </div>
+                    <div className="recordings-tab__controls">
+                        {/* Filter dropdown */}
+                        <div className="recordings-tab__dropdown">
+                            <button
+                                className={`recordings-tab__dropdown-btn ${filterBy !== 'all' ? 'recordings-tab__dropdown-btn--active' : ''}`}
+                                title="Filter by date"
+                            >
+                                <Icon name="filter" size={12} />
+                            </button>
+                            <select
+                                value={filterBy}
+                                onChange={(e) => setFilterBy(e.target.value)}
+                                className="recordings-tab__dropdown-select"
+                            >
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                        </div>
+                        {/* Sort dropdown */}
+                        <div className="recordings-tab__dropdown">
+                            <button
+                                className="recordings-tab__dropdown-btn"
+                                onClick={toggleSortOrder}
+                                title={`Sort ${sortOrder === 'asc' ? 'ascending' : 'descending'}`}
+                            >
+                                <Icon name={sortOrder === 'asc' ? 'arrowUp' : 'arrowDown'} size={12} />
+                            </button>
+                            <select
+                                value={sortBy}
+                                onChange={(e) => setSortBy(e.target.value)}
+                                className="recordings-tab__dropdown-select"
+                            >
+                                <option value="date">Date</option>
+                                <option value="name">Name</option>
+                                <option value="duration">Duration</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
                 {/* Loading state */}
