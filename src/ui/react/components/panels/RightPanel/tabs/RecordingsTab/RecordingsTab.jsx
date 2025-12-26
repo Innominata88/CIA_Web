@@ -165,7 +165,7 @@ export function RecordingsTab({ workspaceId }) {
                                     />
                                 </div>
                                 <AdaptiveButton
-                                    icon="x"
+                                    icon="stop"
                                     variant="danger"
                                     onClick={handleStopRecording}
                                 >
