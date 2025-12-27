@@ -41,6 +41,11 @@ router.get("/", async (req, res, next) => {
     const userId = getUserId(req);
     const { pool } = req.app.locals;
 
+    // User must be authenticated to view stars
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required to view stars" });
+    }
+
     // Check access
     if (!(await checkProjectAccess(pool, projectId, userId))) {
       return res.status(403).json({ error: "Access denied" });
@@ -224,6 +229,11 @@ router.post("/", async (req, res, next) => {
     const userId = getUserId(req);
     const { pool } = req.app.locals;
 
+    // User must be authenticated to star items
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required to star items" });
+    }
+
     // Validate targetType
     if (!targetType || !["file", "folder"].includes(targetType)) {
       return res
@@ -330,6 +340,11 @@ router.delete("/:id", async (req, res, next) => {
     const userId = getUserId(req);
     const { pool } = req.app.locals;
 
+    // User must be authenticated to delete stars
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required to delete stars" });
+    }
+
     // Delete star (only if belongs to user and project)
     const result = await pool.query(
       `DELETE FROM stars 
@@ -364,6 +379,11 @@ router.post("/toggle", async (req, res, next) => {
     const { targetType, targetId, scope = "personal", roomId } = req.body;
     const userId = getUserId(req);
     const { pool } = req.app.locals;
+
+    // User must be authenticated to toggle stars
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required to toggle stars" });
+    }
 
     // Validate
     if (!targetType || !["file", "folder"].includes(targetType)) {
